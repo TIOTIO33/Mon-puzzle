@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Puzzle Cartoon</title>
+  <title>Mon Puzzle Cartoon - Version 200 pièces</title>
   <style>
     body {
       margin: 0;
@@ -22,23 +22,28 @@
     }
     #config {
       margin: 10px;
+      text-align: center;
     }
     #puzzle-board {
       display: grid;
-      gap: 3px;
-      margin: 15px 0;
+      gap: 2px;
+      margin: 10px 0;
       background: #fff;
-      border: 4px dashed #333;
+      border: 3px dashed #333;
       padding: 5px;
-      border-radius: 15px;
+      border-radius: 10px;
+      max-width: 98vw;
+      max-height: 60vh;
+      justify-content: center;
     }
     .slot {
       background: #eee;
-      border: 2px dashed #aaa;
-      width: 80px;
-      height: 80px;
-      border-radius: 10px;
-      box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+      border: 1px dashed #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      border-radius: 8px;
     }
     #pieces-bar {
       display: flex;
@@ -50,23 +55,21 @@
       border-top: 2px solid #ccc;
     }
     .piece {
-      width: 80px;
-      height: 80px;
-      border-radius: 12px;
+      margin-right: 5px;
+      border-radius: 8px;
       cursor: grab;
       border: 2px solid #fff;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
-      margin-right: 5px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
       transition: transform 0.2s ease;
     }
     .piece:active {
-      transform: scale(1.1) rotate(2deg);
+      transform: scale(1.05) rotate(2deg);
     }
     #message {
       font-size: 24px;
       color: #4CAF50;
       display: none;
-      animation: pop 0.5s ease;
+      animation: pop 0.5s ease forwards;
     }
     @keyframes pop {
       0% { transform: scale(0); opacity: 0; }
@@ -79,19 +82,16 @@
 <h1>Mon Puzzle Cartoon</h1>
 
 <div id="config">
-  <label for="gridSize">Taille du puzzle :</label>
+  <label for="gridSize">Choisir le nombre de pièces :</label>
   <select id="gridSize">
-    <option value="3">3 x 3</option>
-    <option value="4">4 x 4</option>
-    <option value="5">5 x 5</option>
-    <option value="10">10 x 10</option>
+    ${[...Array(20)].map((_,i) => `<option value="${i+3}">${i+3} x ${i+3} (${(i+3)*(i+3)} pièces)</option>`).join('')}
   </select>
   <input type="file" id="imageInput" accept="image/*" />
 </div>
 
 <div id="puzzle-board"></div>
 <div id="pieces-bar"></div>
-<div id="message">Bravo, Puzzle Complet !</div>
+<div id="message">Bravo, Puzzle Complet !</div>
 
 <script>
 let img = new Image();
@@ -118,8 +118,10 @@ function generatePuzzle() {
   board.innerHTML = '';
   bar.innerHTML = '';
   message.style.display = 'none';
-  board.style.gridTemplateColumns = `repeat(${gridSize}, 80px)`;
-  board.style.gridTemplateRows = `repeat(${gridSize}, 80px)`;
+
+  const pieceSize = Math.min(80, Math.floor(window.innerWidth * 0.8 / gridSize), Math.floor(window.innerHeight * 0.6 / gridSize));
+  board.style.gridTemplateColumns = `repeat(${gridSize}, ${pieceSize}px)`;
+  board.style.gridTemplateRows = `repeat(${gridSize}, ${pieceSize}px)`;
 
   let total = gridSize * gridSize;
 
@@ -127,6 +129,8 @@ function generatePuzzle() {
     let slot = document.createElement('div');
     slot.className = 'slot';
     slot.dataset.index = i;
+    slot.style.width = pieceSize + 'px';
+    slot.style.height = pieceSize + 'px';
     slot.ondragover = e => e.preventDefault();
     slot.ondrop = dropPiece;
     board.appendChild(slot);
@@ -134,18 +138,19 @@ function generatePuzzle() {
 
   for (let i = 0; i < total; i++) {
     let canvas = document.createElement('canvas');
-    canvas.width = 80;
-    canvas.height = 80;
+    canvas.width = pieceSize;
+    canvas.height = pieceSize;
     let ctx = canvas.getContext('2d');
     let sx = (i % gridSize) * (img.width / gridSize);
     let sy = Math.floor(i / gridSize) * (img.height / gridSize);
-    ctx.drawImage(img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, 80, 80);
+    ctx.drawImage(img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, pieceSize, pieceSize);
     canvas.className = 'piece';
     canvas.draggable = true;
     canvas.dataset.index = i;
     canvas.ondragstart = e => e.dataTransfer.setData('text/plain', i);
     bar.appendChild(canvas);
   }
+
   shuffleBar();
 }
 
@@ -165,7 +170,7 @@ function dropPiece(e) {
     piece.style.cursor = 'default';
     checkWin();
   } else {
-    alert('Oups ! Mauvaise place. Réessaie !');
+    alert('Mauvais emplacement ! Essaie encore.');
   }
 }
 
