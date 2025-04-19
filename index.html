@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mon Puzzle Cartoon</title>
   <style>
@@ -14,6 +14,7 @@
       align-items: center;
       justify-content: flex-start;
       height: 100vh;
+      overflow: hidden;
     }
     h1 {
       margin: 20px;
@@ -22,23 +23,31 @@
     }
     #config {
       margin: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
     #puzzle-board {
       display: grid;
-      gap: 3px;
-      margin: 15px 0;
+      gap: 2px;
+      margin: 10px 0;
       background: #fff;
       border: 4px dashed #333;
       padding: 5px;
       border-radius: 15px;
+      max-height: 60vh;
+      overflow: auto;
     }
     .slot {
       background: #eee;
-      border: 2px dashed #aaa;
-      width: 80px;
-      height: 80px;
-      border-radius: 10px;
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
       box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     #pieces-bar {
       display: flex;
@@ -50,22 +59,24 @@
       border-top: 2px solid #ccc;
     }
     .piece {
-      width: 80px;
-      height: 80px;
-      border-radius: 12px;
+      width: 60px;
+      height: 60px;
       cursor: grab;
-      border: 2px solid #fff;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+      border: 1px solid #ccc;
       margin-right: 5px;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
       transition: transform 0.2s ease;
     }
     .piece:active {
       transform: scale(1.1) rotate(2deg);
     }
     #message {
-      font-size: 24px;
+      font-size: 22px;
       color: #4CAF50;
       display: none;
+      margin: 10px;
       animation: pop 0.5s ease;
     }
     @keyframes pop {
@@ -79,19 +90,14 @@
 <h1>Mon Puzzle Cartoon</h1>
 
 <div id="config">
-  <label for="gridSize">Taille du puzzle :</label>
+  <label for="gridSize">Taille :</label>
   <select id="gridSize">
     <option value="3">3 x 3</option>
     <option value="4">4 x 4</option>
     <option value="5">5 x 5</option>
+    <option value="8">8 x 8</option>
     <option value="10">10 x 10</option>
     <option value="15">15 x 15</option>
-    <option value="20">20 x 20</option>
-    <option value="25">25 x 25</option>
-    <option value="30">30 x 30</option>
-    <option value="50">50 x 50</option>
-    <option value="100">100 x 100</option>
-    <option value="200">200 x 200</option>
   </select>
   <input type="file" id="imageInput" accept="image/*" />
 </div>
@@ -125,10 +131,22 @@ function generatePuzzle() {
   board.innerHTML = '';
   bar.innerHTML = '';
   message.style.display = 'none';
-  board.style.gridTemplateColumns = `repeat(${gridSize}, 80px)`;
-  board.style.gridTemplateRows = `repeat(${gridSize}, 80px)`;
+  board.style.gridTemplateColumns = `repeat(${gridSize}, 60px)`;
 
-  let total = gridSize * gridSize;
+  const total = gridSize * gridSize;
+  const pieceSize = 60;
+  const edges = [];
+
+  for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize; x++) {
+      edges.push({
+        top: y === 0 ? 0 : -edges[(y-1)*gridSize + x].bottom,
+        left: x === 0 ? 0 : -edges[y*gridSize + x -1].right,
+        bottom: y === gridSize-1 ? 0 : Math.random() > 0.5 ? 1 : -1,
+        right: x === gridSize-1 ? 0 : Math.random() > 0.5 ? 1 : -1,
+      });
+    }
+  }
 
   for (let i = 0; i < total; i++) {
     let slot = document.createElement('div');
@@ -140,14 +158,17 @@ function generatePuzzle() {
   }
 
   for (let i = 0; i < total; i++) {
-    let canvas = document.createElement('canvas');
-    canvas.width = 80;
-    canvas.height = 80;
-    let ctx = canvas.getContext('2d');
-    let sx = (i % gridSize) * (img.width / gridSize);
-    let sy = Math.floor(i / gridSize) * (img.height / gridSize);
+    const canvas = document.createElement('canvas');
+    canvas.width = pieceSize;
+    canvas.height = pieceSize;
+    const ctx = canvas.getContext('2d');
 
-    drawPuzzlePiece(ctx, img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, 80, 80);
+    const x = i % gridSize;
+    const y = Math.floor(i / gridSize);
+    const sw = img.width / gridSize;
+    const sh = img.height / gridSize;
+
+    drawPuzzleShape(ctx, img, x, y, sw, sh, pieceSize, edges[i]);
     canvas.className = 'piece';
     canvas.draggable = true;
     canvas.dataset.index = i;
@@ -157,22 +178,41 @@ function generatePuzzle() {
   shuffleBar();
 }
 
-function drawPuzzlePiece(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+function drawPuzzleShape(ctx, img, px, py, sw, sh, size, edge) {
   ctx.save();
   ctx.beginPath();
-  ctx.moveTo(dx + 20, dy);
-  ctx.lineTo(dx + dw - 20, dy);
-  ctx.quadraticCurveTo(dx + dw, dy, dx + dw, dy + 20);
-  ctx.lineTo(dx + dw, dy + dh - 20);
-  ctx.quadraticCurveTo(dx + dw, dy + dh, dx + dw - 20, dy + dh);
-  ctx.lineTo(dx + 20, dy + dh);
-  ctx.quadraticCurveTo(dx, dy + dh, dx, dy + dh - 20);
-  ctx.lineTo(dx, dy + 20);
-  ctx.quadraticCurveTo(dx, dy, dx + 20, dy);
+
+  // Haut
+  ctx.moveTo(0,0);
+  if (edge.top) {
+    ctx.lineTo(size * 0.25, 0);
+    ctx.bezierCurveTo(size * 0.375, edge.top * -size * 0.2, size * 0.625, edge.top * -size * 0.2, size * 0.75, 0);
+  }
+  ctx.lineTo(size,0);
+
+  // Droite
+  if (edge.right) {
+    ctx.lineTo(size, size * 0.25);
+    ctx.bezierCurveTo(size + edge.right * size * 0.2, size * 0.375, size + edge.right * size * 0.2, size * 0.625, size, size * 0.75);
+  }
+  ctx.lineTo(size, size);
+
+  // Bas
+  if (edge.bottom) {
+    ctx.lineTo(size * 0.75, size);
+    ctx.bezierCurveTo(size * 0.625, size + edge.bottom * size * 0.2, size * 0.375, size + edge.bottom * size * 0.2, size * 0.25, size);
+  }
+  ctx.lineTo(0, size);
+
+  // Gauche
+  if (edge.left) {
+    ctx.lineTo(0, size * 0.75);
+    ctx.bezierCurveTo(edge.left * -size * 0.2, size * 0.625, edge.left * -size * 0.2, size * 0.375, 0, size * 0.25);
+  }
   ctx.closePath();
   ctx.clip();
 
-  ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+  ctx.drawImage(img, px * sw, py * sh, sw, sh, 0, 0, size, size);
   ctx.restore();
 }
 
