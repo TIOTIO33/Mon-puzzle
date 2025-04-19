@@ -1,95 +1,92 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Puzzle Cartoon Android</title>
+  <title>Mon Puzzle</title>
   <style>
-    body {
+    html, body {
       margin: 0;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
+      padding: 0;
+      background: #fafafa;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      height: 100vh;
-    }
-    h1 {
-      margin: 10px;
-      color: #333;
-      text-shadow: 1px 1px 3px #fff;
-    }
-    #config {
-      margin: 10px;
-      text-align: center;
+      overflow: hidden;
+      font-family: sans-serif;
     }
     #puzzle-board {
+      flex: 1;
       display: grid;
-      gap: 2px;
-      background: #fff;
-      border: 3px dashed #333;
-      padding: 5px;
-      border-radius: 10px;
-      max-width: 95vw;
-      max-height: 60vh;
       justify-content: center;
+      align-content: center;
+      gap: 2px;
+      background: #333;
     }
     .slot {
-      background: #eee;
-      border: 1px dashed #aaa;
+      background: #ddd;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 8px;
+      border-radius: 6px;
     }
     #pieces-bar {
       display: flex;
       overflow-x: auto;
-      background: rgba(255,255,255,0.8);
-      padding: 10px;
-      width: 100%;
-      box-sizing: border-box;
-      border-top: 2px solid #ccc;
+      background: rgba(0,0,0,0.7);
+      padding: 8px;
+      align-items: center;
+      justify-content: flex-start;
     }
     .piece {
-      margin-right: 5px;
-      border-radius: 8px;
-      cursor: grab;
       border: 2px solid #fff;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-      transition: transform 0.2s ease;
+      border-radius: 6px;
+      margin-right: 6px;
+      cursor: grab;
+      width: auto;
+      height: auto;
     }
     .piece:active {
-      transform: scale(1.05) rotate(2deg);
+      cursor: grabbing;
+    }
+    #setup {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.9);
+      border-radius: 8px;
+      padding: 5px 10px;
+      z-index: 99;
     }
     #message {
-      font-size: 20px;
-      color: #4CAF50;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255,255,255,0.95);
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 1.5em;
       display: none;
-      margin-top: 10px;
-      animation: pop 0.5s ease forwards;
-    }
-    @keyframes pop {
-      0% { transform: scale(0); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+      color: #28a745;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
 
-<h1>Mon Puzzle Cartoon</h1>
-
-<div id="config">
-  <label for="gridSize">Nombre de pièces :</label>
+<div id="setup">
+  <input type="file" id="imageInput" accept="image/*">
+  <label for="gridSize">Pièces:</label>
   <select id="gridSize">
-    ${[...Array(13)].map((_,i)=>`<option value="${i+3}">${i+3} x ${i+3} = ${(i+3)*(i+3)} pièces</option>`).join('')}
+    ${[...Array(13)].map((_, i) => `<option value="${i+3}">${i+3}x${i+3}</option>`).join('')}
   </select>
-  <input type="file" id="imageInput" accept="image/*" />
 </div>
 
 <div id="puzzle-board"></div>
 <div id="pieces-bar"></div>
-<div id="message">Bravo, Puzzle Complet !</div>
+<div id="message">Bravo, puzzle terminé !</div>
 
 <script>
 let img = new Image();
@@ -103,7 +100,7 @@ imageInput.addEventListener('change', e => {
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = function(evt) {
+    reader.onload = evt => {
       img.onload = () => createPuzzle();
       img.src = evt.target.result;
     };
@@ -112,78 +109,76 @@ imageInput.addEventListener('change', e => {
 });
 
 function createPuzzle() {
-  const gridSize = parseInt(gridSelect.value);
+  let size = parseInt(gridSelect.value);
   board.innerHTML = '';
   bar.innerHTML = '';
   message.style.display = 'none';
 
-  const maxWidth = window.innerWidth * 0.9;
-  const maxHeight = window.innerHeight * 0.6;
-  const pieceSize = Math.min(maxWidth / gridSize, maxHeight / gridSize);
+  const maxW = window.innerWidth * 0.98;
+  const maxH = window.innerHeight * 0.7;
+  const pieceSize = Math.min(maxW / size, maxH / size);
 
-  board.style.gridTemplateColumns = `repeat(${gridSize}, ${pieceSize}px)`;
-  board.style.gridTemplateRows = `repeat(${gridSize}, ${pieceSize}px)`;
+  board.style.gridTemplateColumns = `repeat(${size}, ${pieceSize}px)`;
+  board.style.gridTemplateRows = `repeat(${size}, ${pieceSize}px)`;
 
-  let total = gridSize * gridSize;
-
-  for (let i = 0; i < total; i++) {
+  for (let i = 0; i < size * size; i++) {
     let slot = document.createElement('div');
     slot.className = 'slot';
-    slot.dataset.index = i;
     slot.style.width = pieceSize + 'px';
     slot.style.height = pieceSize + 'px';
+    slot.dataset.index = i;
     slot.ondragover = e => e.preventDefault();
     slot.ondrop = dropPiece;
     board.appendChild(slot);
   }
 
-  for (let i = 0; i < total; i++) {
+  for (let i = 0; i < size * size; i++) {
     let canvas = document.createElement('canvas');
     canvas.width = pieceSize;
     canvas.height = pieceSize;
     let ctx = canvas.getContext('2d');
-    let sx = (i % gridSize) * (img.width / gridSize);
-    let sy = Math.floor(i / gridSize) * (img.height / gridSize);
-    ctx.drawImage(img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, pieceSize, pieceSize);
+    let sx = (i % size) * (img.width / size);
+    let sy = Math.floor(i / size) * (img.height / size);
+    ctx.drawImage(img, sx, sy, img.width / size, img.height / size, 0, 0, pieceSize, pieceSize);
     canvas.className = 'piece';
-    canvas.draggable = true;
     canvas.dataset.index = i;
+    canvas.draggable = true;
     canvas.ondragstart = e => e.dataTransfer.setData('text/plain', i);
     bar.appendChild(canvas);
   }
-  shuffleBar();
+  shufflePieces();
 }
 
-function shuffleBar() {
-  for (let i = bar.children.length; i >= 0; i--) {
-    bar.appendChild(bar.children[Math.random() * i | 0]);
+function shufflePieces() {
+  for (let i = bar.children.length; i > 0; i--) {
+    bar.appendChild(bar.children[Math.floor(Math.random() * i)]);
   }
 }
 
 function dropPiece(e) {
-  let index = e.dataTransfer.getData('text/plain');
-  if (parseInt(this.dataset.index) === parseInt(index)) {
-    let piece = [...bar.children].find(p => p.dataset.index === index);
+  const index = e.dataTransfer.getData('text/plain');
+  if (this.dataset.index === index) {
+    const piece = [...bar.children].find(p => p.dataset.index === index);
     if (piece) {
       this.innerHTML = '';
       this.appendChild(piece);
       piece.draggable = false;
-      piece.style.cursor = 'default';
       checkWin();
     }
   } else {
-    alert('Mauvais emplacement ! Essaie encore.');
+    alert("Essaie encore, mauvaise case !");
   }
 }
 
 function checkWin() {
+  let slots = document.querySelectorAll('.slot');
   let correct = 0;
-  document.querySelectorAll('.slot').forEach(slot => {
+  slots.forEach(slot => {
     if (slot.children.length > 0 && slot.children[0].dataset.index === slot.dataset.index) {
       correct++;
     }
   });
-  if (correct === document.querySelectorAll('.slot').length) {
+  if (correct === slots.length) {
     message.style.display = 'block';
   }
 }
