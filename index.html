@@ -1,92 +1,104 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Puzzle</title>
+  <title>Mon Puzzle Cartoon</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      background: #fafafa;
-      height: 100%;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      font-family: sans-serif;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+    }
+    h1 {
+      margin: 20px;
+      color: #333;
+      text-shadow: 1px 1px 3px #fff;
+    }
+    #config {
+      margin: 10px;
     }
     #puzzle-board {
-      flex: 1;
       display: grid;
-      justify-content: center;
-      align-content: center;
-      gap: 2px;
-      background: #333;
+      gap: 3px;
+      margin: 15px 0;
+      background: #fff;
+      border: 4px dashed #333;
+      padding: 5px;
+      border-radius: 15px;
     }
     .slot {
-      background: #ddd;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 6px;
+      background: #eee;
+      border: 2px dashed #aaa;
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
     }
     #pieces-bar {
       display: flex;
       overflow-x: auto;
-      background: rgba(0,0,0,0.7);
-      padding: 8px;
-      align-items: center;
-      justify-content: flex-start;
+      background: rgba(255,255,255,0.8);
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      border-top: 2px solid #ccc;
     }
     .piece {
-      border: 2px solid #fff;
-      border-radius: 6px;
-      margin-right: 6px;
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
       cursor: grab;
-      width: auto;
-      height: auto;
+      border: 2px solid #fff;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+      margin-right: 5px;
+      transition: transform 0.2s ease;
     }
     .piece:active {
-      cursor: grabbing;
-    }
-    #setup {
-      position: absolute;
-      top: 5px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.9);
-      border-radius: 8px;
-      padding: 5px 10px;
-      z-index: 99;
+      transform: scale(1.1) rotate(2deg);
     }
     #message {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(255,255,255,0.95);
-      padding: 20px;
-      border-radius: 10px;
-      font-size: 1.5em;
+      font-size: 24px;
+      color: #4CAF50;
       display: none;
-      color: #28a745;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      animation: pop 0.5s ease;
+    }
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 <body>
 
-<div id="setup">
-  <input type="file" id="imageInput" accept="image/*">
-  <label for="gridSize">Pièces:</label>
+<h1>Mon Puzzle Cartoon</h1>
+
+<div id="config">
+  <label for="gridSize">Taille du puzzle :</label>
   <select id="gridSize">
-    ${[...Array(13)].map((_, i) => `<option value="${i+3}">${i+3}x${i+3}</option>`).join('')}
+    <option value="3">3 x 3</option>
+    <option value="4">4 x 4</option>
+    <option value="5">5 x 5</option>
+    <option value="10">10 x 10</option>
+    <option value="15">15 x 15</option>
+    <option value="20">20 x 20</option>
+    <option value="25">25 x 25</option>
+    <option value="30">30 x 30</option>
+    <option value="50">50 x 50</option>
+    <option value="100">100 x 100</option>
+    <option value="200">200 x 200</option>
   </select>
+  <input type="file" id="imageInput" accept="image/*" />
 </div>
 
 <div id="puzzle-board"></div>
 <div id="pieces-bar"></div>
-<div id="message">Bravo, puzzle terminé !</div>
+<div id="message">Bravo, Puzzle Complet !</div>
 
 <script>
 let img = new Image();
@@ -100,85 +112,98 @@ imageInput.addEventListener('change', e => {
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = evt => {
-      img.onload = () => createPuzzle();
+    reader.onload = function(evt) {
+      img.onload = () => generatePuzzle();
       img.src = evt.target.result;
     };
     reader.readAsDataURL(file);
   }
 });
 
-function createPuzzle() {
-  let size = parseInt(gridSelect.value);
+function generatePuzzle() {
+  const gridSize = parseInt(gridSelect.value);
   board.innerHTML = '';
   bar.innerHTML = '';
   message.style.display = 'none';
+  board.style.gridTemplateColumns = `repeat(${gridSize}, 80px)`;
+  board.style.gridTemplateRows = `repeat(${gridSize}, 80px)`;
 
-  const maxW = window.innerWidth * 0.98;
-  const maxH = window.innerHeight * 0.7;
-  const pieceSize = Math.min(maxW / size, maxH / size);
+  let total = gridSize * gridSize;
 
-  board.style.gridTemplateColumns = `repeat(${size}, ${pieceSize}px)`;
-  board.style.gridTemplateRows = `repeat(${size}, ${pieceSize}px)`;
-
-  for (let i = 0; i < size * size; i++) {
+  for (let i = 0; i < total; i++) {
     let slot = document.createElement('div');
     slot.className = 'slot';
-    slot.style.width = pieceSize + 'px';
-    slot.style.height = pieceSize + 'px';
     slot.dataset.index = i;
     slot.ondragover = e => e.preventDefault();
     slot.ondrop = dropPiece;
     board.appendChild(slot);
   }
 
-  for (let i = 0; i < size * size; i++) {
+  for (let i = 0; i < total; i++) {
     let canvas = document.createElement('canvas');
-    canvas.width = pieceSize;
-    canvas.height = pieceSize;
+    canvas.width = 80;
+    canvas.height = 80;
     let ctx = canvas.getContext('2d');
-    let sx = (i % size) * (img.width / size);
-    let sy = Math.floor(i / size) * (img.height / size);
-    ctx.drawImage(img, sx, sy, img.width / size, img.height / size, 0, 0, pieceSize, pieceSize);
+    let sx = (i % gridSize) * (img.width / gridSize);
+    let sy = Math.floor(i / gridSize) * (img.height / gridSize);
+
+    drawPuzzlePiece(ctx, img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, 80, 80);
     canvas.className = 'piece';
-    canvas.dataset.index = i;
     canvas.draggable = true;
+    canvas.dataset.index = i;
     canvas.ondragstart = e => e.dataTransfer.setData('text/plain', i);
     bar.appendChild(canvas);
   }
-  shufflePieces();
+  shuffleBar();
 }
 
-function shufflePieces() {
-  for (let i = bar.children.length; i > 0; i--) {
-    bar.appendChild(bar.children[Math.floor(Math.random() * i)]);
+function drawPuzzlePiece(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(dx + 20, dy);
+  ctx.lineTo(dx + dw - 20, dy);
+  ctx.quadraticCurveTo(dx + dw, dy, dx + dw, dy + 20);
+  ctx.lineTo(dx + dw, dy + dh - 20);
+  ctx.quadraticCurveTo(dx + dw, dy + dh, dx + dw - 20, dy + dh);
+  ctx.lineTo(dx + 20, dy + dh);
+  ctx.quadraticCurveTo(dx, dy + dh, dx, dy + dh - 20);
+  ctx.lineTo(dx, dy + 20);
+  ctx.quadraticCurveTo(dx, dy, dx + 20, dy);
+  ctx.closePath();
+  ctx.clip();
+
+  ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+  ctx.restore();
+}
+
+function shuffleBar() {
+  for (let i = bar.children.length; i >= 0; i--) {
+    bar.appendChild(bar.children[Math.random() * i | 0]);
   }
 }
 
 function dropPiece(e) {
-  const index = e.dataTransfer.getData('text/plain');
-  if (this.dataset.index === index) {
-    const piece = [...bar.children].find(p => p.dataset.index === index);
-    if (piece) {
-      this.innerHTML = '';
-      this.appendChild(piece);
-      piece.draggable = false;
-      checkWin();
-    }
+  let index = e.dataTransfer.getData('text/plain');
+  if (parseInt(this.dataset.index) === parseInt(index)) {
+    let piece = [...bar.children].find(p => p.dataset.index === index);
+    this.innerHTML = '';
+    this.appendChild(piece);
+    piece.draggable = false;
+    piece.style.cursor = 'default';
+    checkWin();
   } else {
-    alert("Essaie encore, mauvaise case !");
+    alert('Oups ! Mauvaise place. Réessaie !');
   }
 }
 
 function checkWin() {
-  let slots = document.querySelectorAll('.slot');
   let correct = 0;
-  slots.forEach(slot => {
+  document.querySelectorAll('.slot').forEach(slot => {
     if (slot.children.length > 0 && slot.children[0].dataset.index === slot.dataset.index) {
       correct++;
     }
   });
-  if (correct === slots.length) {
+  if (correct === document.querySelectorAll('.slot').length) {
     message.style.display = 'block';
   }
 }
