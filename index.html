@@ -12,8 +12,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
     }
     h1 {
       margin: 20px;
@@ -100,10 +98,9 @@ function generatePuzzle() {
   bar.innerHTML = '';
   board.style.gridTemplateColumns = `repeat(${gridSize}, 60px)`;
 
-  let total = gridSize * gridSize;
-
+  const total = gridSize * gridSize;
   for (let i = 0; i < total; i++) {
-    let slot = document.createElement('div');
+    const slot = document.createElement('div');
     slot.className = 'slot';
     slot.dataset.index = i;
     slot.ondragover = e => e.preventDefault();
@@ -112,48 +109,20 @@ function generatePuzzle() {
   }
 
   for (let i = 0; i < total; i++) {
-    let canvas = createPuzzlePiece(i, gridSize);
-    canvas.className = 'piece';
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
     canvas.width = 60;
     canvas.height = 60;
+    const sx = (i % gridSize) * (img.width / gridSize);
+    const sy = Math.floor(i / gridSize) * (img.height / gridSize);
+    ctx.drawImage(img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, 60, 60);
+    canvas.className = 'piece';
     canvas.draggable = true;
     canvas.dataset.index = i;
     canvas.ondragstart = e => e.dataTransfer.setData('text/plain', i);
     bar.appendChild(canvas);
   }
   shuffleBar();
-}
-
-function createPuzzlePiece(index, gridSize) {
-  let canvas = document.createElement('canvas');
-  let ctx = canvas.getContext('2d');
-  let sx = (index % gridSize) * (img.width / gridSize);
-  let sy = Math.floor(index / gridSize) * (img.height / gridSize);
-  canvas.width = 60;
-  canvas.height = 60;
-
-  let shape = new Path2D();
-  let bumpSize = 10;
-
-  shape.moveTo(bumpSize, 0);
-  shape.lineTo(60 - bumpSize, 0);
-  shape.quadraticCurveTo(60, 10, 60 - bumpSize, 20);
-  shape.lineTo(60 - bumpSize, 60 - bumpSize);
-  shape.quadraticCurveTo(50, 60, 40, 60 - bumpSize);
-  shape.lineTo(bumpSize, 60 - bumpSize);
-  shape.quadraticCurveTo(0, 50, bumpSize, 40);
-  shape.lineTo(bumpSize, bumpSize);
-  shape.quadraticCurveTo(10, 0, bumpSize, 0);
-
-  ctx.save();
-  ctx.clip(shape);
-  ctx.drawImage(img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, 60, 60);
-  ctx.restore();
-
-  ctx.strokeStyle = "#000";
-  ctx.lineWidth = 1;
-  ctx.stroke(shape);
-  return canvas;
 }
 
 function shuffleBar() {
@@ -163,10 +132,10 @@ function shuffleBar() {
 }
 
 function dropPiece(e) {
-  let index = e.dataTransfer.getData('text/plain');
-  let existing = this.querySelector('canvas');
+  const index = e.dataTransfer.getData('text/plain');
+  const existing = this.querySelector('canvas');
   if (existing) bar.appendChild(existing);
-  let piece = [...bar.children].find(p => p.dataset.index === index);
+  const piece = [...bar.children].find(p => p.dataset.index === index);
   if (piece) {
     this.innerHTML = '';
     this.appendChild(piece);
