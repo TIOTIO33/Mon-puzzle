@@ -1,8 +1,9 @@
-<!DOCTYPE html><html lang="fr">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Puzzle Drag & Drop</title>
+    <title>Mon Puzzle</title>
     <style>
         body {
             margin: 0;
@@ -10,10 +11,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             background: #f4f4f4;
             height: 100vh;
+            justify-content: flex-start;
         }
+        h2 { margin: 20px 0; }
         #puzzle-board {
             display: grid;
             gap: 2px;
@@ -27,11 +29,12 @@
         }
         #pieces-bar {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            overflow-x: auto;
             padding: 10px;
             background: #333;
             gap: 5px;
+            width: 100%;
+            box-sizing: border-box;
         }
         .piece {
             width: 80px;
@@ -46,11 +49,12 @@
     <h2>Mon Puzzle</h2>
     <input type="file" id="imageInput" accept="image/*">
     <div id="puzzle-board"></div>
-    <div id="pieces-bar"></div><script>
+    <div id="pieces-bar"></div>
+
+<script>
 let gridSize = 3;
 let img = new Image();
 let pieces = [];
-
 const board = document.getElementById('puzzle-board');
 const bar = document.getElementById('pieces-bar');
 const imageInput = document.getElementById('imageInput');
@@ -71,10 +75,8 @@ function generatePuzzle() {
     board.innerHTML = '';
     bar.innerHTML = '';
     pieces = [];
-
     board.style.gridTemplateColumns = `repeat(${gridSize}, 80px)`;
     board.style.gridTemplateRows = `repeat(${gridSize}, 80px)`;
-
     let count = 0;
     for (let y = 0; y < gridSize; y++) {
         for (let x = 0; x < gridSize; x++) {
@@ -87,16 +89,13 @@ function generatePuzzle() {
             count++;
         }
     }
-
     for (let i = 0; i < gridSize * gridSize; i++) {
         let canvas = document.createElement('canvas');
         canvas.width = 80;
         canvas.height = 80;
         let ctx = canvas.getContext('2d');
-
         let sx = (i % gridSize) * (img.width / gridSize);
         let sy = Math.floor(i / gridSize) * (img.height / gridSize);
-
         ctx.drawImage(img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, 80, 80);
         canvas.classList.add('piece');
         canvas.draggable = true;
@@ -104,11 +103,9 @@ function generatePuzzle() {
         canvas.ondragstart = e => {
             e.dataTransfer.setData('text/plain', i);
         };
-
         bar.appendChild(canvas);
         pieces.push(canvas);
     }
-
     shuffleBar();
 }
 
@@ -130,5 +127,6 @@ function dropPiece(e) {
         alert('Mauvais emplacement, essaie encore !');
     }
 }
-</script></body>
+</script>
+</body>
 </html>
