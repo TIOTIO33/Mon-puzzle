@@ -12,6 +12,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
     }
     h1 {
       margin: 20px;
@@ -23,34 +25,55 @@
     }
     #puzzle-board {
       display: grid;
-      gap: 2px;
+      gap: 3px;
       margin: 15px 0;
       background: #fff;
-      border: 3px dashed #333;
+      border: 4px dashed #333;
       padding: 5px;
-      border-radius: 10px;
+      border-radius: 15px;
     }
     .slot {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      background: rgba(200,200,200,0.3);
+      background: #eee;
+      border: 2px dashed #aaa;
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     #pieces-bar {
       display: flex;
       overflow-x: auto;
       background: rgba(255,255,255,0.8);
-      padding: 8px;
+      padding: 10px;
       width: 100%;
       box-sizing: border-box;
       border-top: 2px solid #ccc;
     }
-    canvas.piece {
-      margin-right: 5px;
+    .piece {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
       cursor: grab;
-      border-radius: 8px;
-      border: 1px solid #aaa;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      border: 2px solid #fff;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+      margin-right: 5px;
+      transition: transform 0.2s ease;
+    }
+    .piece:active {
+      transform: scale(1.1) rotate(2deg);
+    }
+    #message {
+      font-size: 24px;
+      color: #4CAF50;
+      display: none;
+      animation: pop 0.5s ease;
+    }
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
@@ -61,17 +84,18 @@
 <div id="config">
   <label for="gridSize">Taille du puzzle :</label>
   <select id="gridSize">
-    <option value="3">3x3</option>
-    <option value="4">4x4</option>
-    <option value="5">5x5</option>
-    <option value="10">10x10</option>
-    <option value="15">15x15</option>
+    <option value="3">3 x 3</option>
+    <option value="4">4 x 4</option>
+    <option value="5">5 x 5</option>
+    <option value="10">10 x 10</option>
+    <option value="15">15 x 15</option>
   </select>
   <input type="file" id="imageInput" accept="image/*" />
 </div>
 
 <div id="puzzle-board"></div>
 <div id="pieces-bar"></div>
+<div id="message">Bravo, Puzzle Complet !</div>
 
 <script>
 let img = new Image();
@@ -79,12 +103,13 @@ const board = document.getElementById('puzzle-board');
 const bar = document.getElementById('pieces-bar');
 const gridSelect = document.getElementById('gridSize');
 const imageInput = document.getElementById('imageInput');
+const message = document.getElementById('message');
 
 imageInput.addEventListener('change', e => {
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = evt => {
+    reader.onload = function(evt) {
       img.onload = () => generatePuzzle();
       img.src = evt.target.result;
     };
@@ -96,26 +121,42 @@ function generatePuzzle() {
   const gridSize = parseInt(gridSelect.value);
   board.innerHTML = '';
   bar.innerHTML = '';
-  board.style.gridTemplateColumns = `repeat(${gridSize}, 60px)`;
+  message.style.display = 'none';
+  board.style.gridTemplateColumns = `repeat(${gridSize}, 80px)`;
+  board.style.gridTemplateRows = `repeat(${gridSize}, 80px)`;
 
-  const total = gridSize * gridSize;
+  let total = gridSize * gridSize;
+
   for (let i = 0; i < total; i++) {
-    const slot = document.createElement('div');
+    let slot = document.createElement('div');
     slot.className = 'slot';
     slot.dataset.index = i;
     slot.ondragover = e => e.preventDefault();
     slot.ondrop = dropPiece;
+    slot.onclick = function() {
+      if (this.firstChild) {
+        let piece = this.firstChild;
+        bar.appendChild(piece);
+        piece.draggable = true;
+        piece.style.cursor = 'grab';
+        this.innerHTML = '';
+      }
+    };
     board.appendChild(slot);
   }
 
   for (let i = 0; i < total; i++) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 60;
-    canvas.height = 60;
-    const sx = (i % gridSize) * (img.width / gridSize);
-    const sy = Math.floor(i / gridSize) * (img.height / gridSize);
-    ctx.drawImage(img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, 60, 60);
+    let canvas = document.createElement('canvas');
+    canvas.width = 80;
+    canvas.height = 80;
+    let ctx = canvas.getContext('2d');
+    let col = i % gridSize;
+    let row = Math.floor(i / gridSize);
+    ctx.drawImage(img,
+      col * img.width / gridSize, row * img.height / gridSize,
+      img.width / gridSize, img.height / gridSize,
+      0, 0, 80, 80
+    );
     canvas.className = 'piece';
     canvas.draggable = true;
     canvas.dataset.index = i;
@@ -132,13 +173,26 @@ function shuffleBar() {
 }
 
 function dropPiece(e) {
-  const index = e.dataTransfer.getData('text/plain');
-  const existing = this.querySelector('canvas');
-  if (existing) bar.appendChild(existing);
-  const piece = [...bar.children].find(p => p.dataset.index === index);
-  if (piece) {
+  let index = e.dataTransfer.getData('text/plain');
+  if (!this.firstChild) {
+    let piece = [...bar.children].find(p => p.dataset.index === index);
     this.innerHTML = '';
     this.appendChild(piece);
+    piece.draggable = false;
+    piece.style.cursor = 'default';
+    checkWin();
+  }
+}
+
+function checkWin() {
+  let correct = 0;
+  document.querySelectorAll('.slot').forEach(slot => {
+    if (slot.children.length > 0 && slot.children[0].dataset.index === slot.dataset.index) {
+      correct++;
+    }
+  });
+  if (correct === document.querySelectorAll('.slot').length) {
+    message.style.display = 'block';
   }
 }
 </script>
