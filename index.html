@@ -28,44 +28,31 @@
       gap: 2px;
       margin: 15px 0;
       background: #fff;
-      border: 4px dashed #333;
+      border: 3px dashed #333;
       padding: 5px;
-      border-radius: 15px;
+      border-radius: 10px;
     }
     .slot {
-      width: 80px;
-      height: 80px;
-      border: 2px dashed #aaa;
-      border-radius: 10px;
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      background: rgba(200,200,200,0.3);
     }
     #pieces-bar {
       display: flex;
       overflow-x: auto;
       background: rgba(255,255,255,0.8);
-      padding: 10px;
+      padding: 8px;
       width: 100%;
       box-sizing: border-box;
       border-top: 2px solid #ccc;
     }
     canvas.piece {
-      cursor: grab;
       margin-right: 5px;
-      border-radius: 12px;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
-      transition: transform 0.2s ease;
-    }
-    canvas.piece:active {
-      transform: scale(1.1) rotate(2deg);
-    }
-    #message {
-      font-size: 24px;
-      color: #4CAF50;
-      display: none;
-      animation: pop 0.5s ease;
-    }
-    @keyframes pop {
-      0% { transform: scale(0); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+      cursor: grab;
+      border-radius: 8px;
+      border: 1px solid #aaa;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     }
   </style>
 </head>
@@ -76,18 +63,17 @@
 <div id="config">
   <label for="gridSize">Taille du puzzle :</label>
   <select id="gridSize">
-    <option value="3">3 x 3</option>
-    <option value="4">4 x 4</option>
-    <option value="5">5 x 5</option>
-    <option value="10">10 x 10</option>
-    <option value="15">15 x 15</option>
+    <option value="3">3x3</option>
+    <option value="4">4x4</option>
+    <option value="5">5x5</option>
+    <option value="10">10x10</option>
+    <option value="15">15x15</option>
   </select>
   <input type="file" id="imageInput" accept="image/*" />
 </div>
 
 <div id="puzzle-board"></div>
 <div id="pieces-bar"></div>
-<div id="message">Bravo, Puzzle Complet !</div>
 
 <script>
 let img = new Image();
@@ -95,13 +81,12 @@ const board = document.getElementById('puzzle-board');
 const bar = document.getElementById('pieces-bar');
 const gridSelect = document.getElementById('gridSize');
 const imageInput = document.getElementById('imageInput');
-const message = document.getElementById('message');
 
 imageInput.addEventListener('change', e => {
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = function(evt) {
+    reader.onload = evt => {
       img.onload = () => generatePuzzle();
       img.src = evt.target.result;
     };
@@ -113,9 +98,7 @@ function generatePuzzle() {
   const gridSize = parseInt(gridSelect.value);
   board.innerHTML = '';
   bar.innerHTML = '';
-  message.style.display = 'none';
-  board.style.gridTemplateColumns = `repeat(${gridSize}, 80px)`;
-  board.style.gridTemplateRows = `repeat(${gridSize}, 80px)`;
+  board.style.gridTemplateColumns = `repeat(${gridSize}, 60px)`;
 
   let total = gridSize * gridSize;
 
@@ -131,43 +114,45 @@ function generatePuzzle() {
   for (let i = 0; i < total; i++) {
     let canvas = createPuzzlePiece(i, gridSize);
     canvas.className = 'piece';
+    canvas.width = 60;
+    canvas.height = 60;
     canvas.draggable = true;
     canvas.dataset.index = i;
     canvas.ondragstart = e => e.dataTransfer.setData('text/plain', i);
     bar.appendChild(canvas);
   }
-
   shuffleBar();
 }
 
 function createPuzzlePiece(index, gridSize) {
   let canvas = document.createElement('canvas');
-  canvas.width = 80;
-  canvas.height = 80;
   let ctx = canvas.getContext('2d');
+  let sx = (index % gridSize) * (img.width / gridSize);
+  let sy = Math.floor(index / gridSize) * (img.height / gridSize);
+  canvas.width = 60;
+  canvas.height = 60;
 
-  let x = index % gridSize;
-  let y = Math.floor(index / gridSize);
+  let shape = new Path2D();
+  let bumpSize = 10;
+
+  shape.moveTo(bumpSize, 0);
+  shape.lineTo(60 - bumpSize, 0);
+  shape.quadraticCurveTo(60, 10, 60 - bumpSize, 20);
+  shape.lineTo(60 - bumpSize, 60 - bumpSize);
+  shape.quadraticCurveTo(50, 60, 40, 60 - bumpSize);
+  shape.lineTo(bumpSize, 60 - bumpSize);
+  shape.quadraticCurveTo(0, 50, bumpSize, 40);
+  shape.lineTo(bumpSize, bumpSize);
+  shape.quadraticCurveTo(10, 0, bumpSize, 0);
 
   ctx.save();
-  ctx.beginPath();
-
-  const size = 80;
-  const tabSize = 20;
-
-  ctx.moveTo(0, 0);
-  ctx.lineTo(size, 0);
-  ctx.lineTo(size, size);
-  ctx.lineTo(0, size);
-  ctx.closePath();
-  ctx.clip();
-
-  let sx = x * (img.width / gridSize);
-  let sy = y * (img.height / gridSize);
-
-  ctx.drawImage(img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, size, size);
+  ctx.clip(shape);
+  ctx.drawImage(img, sx, sy, img.width / gridSize, img.height / gridSize, 0, 0, 60, 60);
   ctx.restore();
 
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 1;
+  ctx.stroke(shape);
   return canvas;
 }
 
@@ -179,25 +164,12 @@ function shuffleBar() {
 
 function dropPiece(e) {
   let index = e.dataTransfer.getData('text/plain');
+  let existing = this.querySelector('canvas');
+  if (existing) bar.appendChild(existing);
   let piece = [...bar.children].find(p => p.dataset.index === index);
   if (piece) {
     this.innerHTML = '';
     this.appendChild(piece);
-    piece.draggable = false;
-    piece.style.cursor = 'default';
-    checkWin();
-  }
-}
-
-function checkWin() {
-  let correct = 0;
-  document.querySelectorAll('.slot').forEach(slot => {
-    if (slot.children.length > 0 && slot.children[0].dataset.index === slot.dataset.index) {
-      correct++;
-    }
-  });
-  if (correct === document.querySelectorAll('.slot').length) {
-    message.style.display = 'block';
   }
 }
 </script>
