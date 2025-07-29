@@ -7,224 +7,466 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-color: #f2f2f2;
-      --text-color: #111;
-      --table-bg: rgba(255,255,255,0.9);
-      --th-bg: #eaeaea;
-      --hover-bg: #ddd;
-    }
-    body.dark-mode {
       --bg-color: #0a0a0a;
       --text-color: #f1f1f1;
-      --table-bg: rgba(0,0,0,0.7);
+      --table-bg: rgba(0, 0, 0, 0.7);
       --th-bg: #1c1c1c;
       --hover-bg: #2e2e2e;
     }
+
     body {
-      margin:0;
-      font-family:'Inter', sans-serif;
-      background: var(--bg-color);
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-color) url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/e5dce12a-d25b-45ce-ad91-87776a695df5.png') no-repeat center center fixed;
+      background-size: cover;
       color: var(--text-color);
-      padding:40px 20px;
+      padding: 40px 20px 80px;
       transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    .container { max-width:1200px; margin:auto; }
-    h1 { text-align:center; font-size:2rem; margin-bottom:10px; }
-    #last-update { text-align:center; color:#888; font-size:0.9rem; }
-    #symbol { display:block; margin:20px auto; padding:10px; font-size:1rem; }
-    .tradingview-widget { max-width:100%; margin:40px auto; border:1px solid #ccc; border-radius:10px; overflow:hidden; }
-    .info-panel { display:flex; justify-content: space-around; flex-wrap:wrap; margin:30px 0; background:var(--table-bg); padding:20px; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.1); }
-    .info-panel div { font-size:1.1rem; font-weight:600; margin:10px; }
-    .high { color:#00c853; }
-    .low { color:#d50000; }
-    table { width:100%; margin:30px 0; border-collapse:collapse; background:var(--table-bg); box-shadow:0 0 20px rgba(0,0,0,0.1); border-radius:8px; overflow:hidden; }
-    th, td { padding:15px; text-align:center; }
-    th { background:var(--th-bg); color:var(--text-color); font-weight:600; }
-    tr:hover { background:var(--hover-bg); }
-    td.green { color:#00aa6c; font-weight:600; }
-    td.red { color:#d33; }
-    #toggle-theme { position:fixed; top:20px; right:20px; padding:8px 14px; border:none; border-radius:8px; background:#444; color:#fff; cursor:pointer; font-weight:bold; transition:background 0.3s; }
-    body:not(.dark-mode) #toggle-theme { background:#ddd; color:#111; }
-    #news { margin-top:40px; background:var(--table-bg); padding:20px; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.1); }
-    #news h2 { margin-bottom:10px; }
-    #news-list { list-style:none; padding-left:0; }
-    #news-list li { margin-bottom:10px; }
-    #news-list a { color: var(--text-color); text-decoration:underline; }
-    #legal-section { display:none; max-width:800px; margin:20px auto; font-size:0.9rem; line-height:1.6; background:var(--table-bg); padding:20px; border-radius:10px; }
-    #toggle-legal { font-size:0.9rem; text-decoration:underline; color:#0077cc; cursor:pointer; }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      flex-grow: 1;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    #last-update {
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    #symbol {
+      display: block;
+      margin: 20px auto;
+      padding: 10px;
+      font-size: 1rem;
+      background: #222;
+      color: #eee;
+      border: 1px solid #444;
+      border-radius: 6px;
+    }
+
+    .tradingview-widget {
+      max-width: 100%;
+      margin: 40px auto;
+      border: 1px solid #444;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #121212;
+    }
+
+    .info-panel {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin: 30px 0;
+      background: var(--table-bg);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.05);
+    }
+
+    .info-panel div {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 10px;
+    }
+
+    .high {
+      color: #00c853;
+    }
+
+    .low {
+      color: #d50000;
+    }
+
+    table {
+      width: 100%;
+      margin: 30px 0;
+      border-collapse: collapse;
+      background: var(--table-bg);
+      box-shadow: 0 0 20px rgba(255,255,255,0.05);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+      color: var(--text-color);
+    }
+
+    th {
+      background: var(--th-bg);
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background: var(--hover-bg);
+    }
+
+    td.green {
+      color: #00aa6c;
+      font-weight: 600;
+    }
+
+    td.red {
+      color: #d33;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 1.8rem;
+      color: var(--text-color);
+    }
+
+    #news-list {
+      max-width: 800px;
+      margin: 20px auto 60px;
+      list-style: none;
+      padding-left: 0;
+      color: var(--text-color);
+    }
+
+    #news-list li {
+      margin-bottom: 1.5em;
+      padding: 10px;
+      background: rgba(20, 20, 20, 0.7);
+      border-radius: 8px;
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    #news-list img {
+      object-fit: cover;
+      border-radius: 5px;
+      flex-shrink: 0;
+      width: 120px;
+      height: 80px;
+    }
+
+    #news-list a {
+      font-weight: 600;
+      color: #66aaff;
+      text-decoration: none;
+      font-size: 1.1rem;
+    }
+
+    #news-list a:hover {
+      text-decoration: underline;
+    }
+
+    #news-list p {
+      margin: 8px 0;
+      font-size: 0.9rem;
+      color: #ddd;
+    }
+
+    #news-list small {
+      color: #aaa;
+    }
+
+    #legal {
+      max-width: 100%;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      padding: 15px 20px;
+      background: rgba(0,0,0,0.5);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
+      z-index: 1000;
+      font-family: 'Inter', sans-serif;
+    }
+
+    #legal a {
+      color: #66aaff;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Modal styles */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1500;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    #modal {
+      background: #121212;
+      border-radius: 12px;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 25px 30px;
+      color: #ddd;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+      position: relative;
+    }
+
+    #modal h2 {
+      color: #66aaff;
+      margin-top: 0;
+      font-size: 1.4rem;
+    }
+
+    #modal button.close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: #66aaff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #modal button.close-btn:hover {
+      color: #aaddff;
+    }
+
+    #modal p, #modal ul {
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
-  <button id="toggle-theme">🌙 Mode sombre</button>
   <div class="container">
-    <h1>Prix Crypto - Multi‑Exchanges</h1>
-    <p id="last-update">Dernière mise à jour : ...</p>
-    <p style="text-align:center;">
-      <span id="toggle-legal">Mentions légales / CGU / Confidentialité</span>
-    </p>
-    <select id="symbol">
+    <h1>Prix Crypto - Multi-Exchanges</h1>
+    <p id="last-update">Dernière mise à jour : </p>
+
+    <select id="symbol" aria-label="Choisir une crypto-monnaie">
       <option value="BTCUSDT">Bitcoin (BTC)</option>
       <option value="ETHUSDT">Ethereum (ETH)</option>
     </select>
+
     <div class="tradingview-widget">
       <iframe id="chart" src="" width="100%" height="350" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
     </div>
+
     <div class="info-panel">
       <div id="spread">Spread : ...</div>
-      <div id="high">Plus haut : ...</div>
-      <div id="low">Plus bas : ...</div>
+      <div id="high" class="high">Plus haut : ...</div>
+      <div id="low" class="low">Plus bas : ...</div>
     </div>
+
     <table>
-      <thead><tr><th>Exchange</th><th>Prix (USD)</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Exchange</th>
+          <th>Prix (USD)</th>
+        </tr>
+      </thead>
       <tbody id="price-table"></tbody>
     </table>
-    <div id="news">
-      <h2>📰 Actualités Crypto</h2>
-      <ul id="news-list"><li>Chargement...</li></ul>
-    </div>
-    <div id="legal-section">
-      <h3>Conditions Générales d’Utilisation (CGU)</h3>
-      <p>Cette application permet de comparer les prix des cryptomonnaies (Bitcoin, Ethereum, etc.) sur plusieurs exchanges, et d’afficher des actualités crypto.</p>
-      <strong>Fonctionnalités :</strong>
+
+    <h2>Actualités Crypto</h2>
+    <ul id="news-list"></ul>
+  </div>
+
+  <p id="legal">
+    Ce site est uniquement à but informatif et ne constitue en aucun cas un conseil en investissement. Investissez de manière responsable.<br>
+    <a id="open-legal" href="javascript:void(0)">Mentions légales, CGU & Politique de confidentialité</a>
+  </p>
+
+  <!-- Modal -->
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="modal">
+      <button class="close-btn" aria-label="Fermer la fenêtre">&times;</button>
+      <h2 id="modal-title">Mentions légales, CGU & Politique de confidentialité</h2>
+
+      <h3>1. Fonctionnalités de l’application</h3>
+      <p>Cette application permet de comparer en temps réel les prix de différentes crypto-monnaies sur plusieurs plateformes d’échange. Elle affiche également les actualités liées à la crypto.</p>
+
+      <h3>2. Droits de l’utilisateur</h3>
       <ul>
-        <li>Affichage des prix en direct sur différents exchanges</li>
-        <li>Calcul du spread (écart entre prix maximum et minimum)</li>
-        <li>Graphique interactif via TradingView</li>
-        <li>Actualités récentes sur la crypto (via NewsAPI)</li>
+        <li>L’utilisateur peut consulter librement les données affichées.</li>
+        <li>L’utilisateur est responsable de ses décisions d’investissement.</li>
+        <li>L’utilisateur peut choisir la crypto-monnaie à afficher via le menu déroulant.</li>
       </ul>
-      <strong>Droits de l’utilisateur :</strong>
-      <ul>
-        <li>Utilisation gratuite et sans inscription</li>
-        <li>L’utilisateur est responsable de ses décisions</li>
-        <li>Reproduction commerciale interdite sans autorisation</li>
-      </ul>
-      <strong>Limites de responsabilité :</strong>
-      <ul>
-        <li>Les données proviennent d’API tierces et peuvent être inexactes ou incomplètes</li>
-        <li>Aucune garantie ni conseil financier</li>
-        <li>L’auteur décline toute responsabilité en cas de perte liée à son usage</li>
-      </ul>
-      <h3>Politique de Confidentialité</h3>
-      <p>Aucune donnée personnelle n’est collectée. Aucun cookie de tracking ni outil d’analyse n’est utilisé.</p>
-      <p>Les données affichées proviennent d’API publiques (Binance, Kraken, NewsAPI etc.).</p>
-      <h3>Mentions légales</h3>
-      <ul>
-        <li><strong>Éditeur :</strong> Jean Dupont</li>
-        <li><strong>Email :</strong> contact@tonsitecrypto.com</li>
-        <li><strong>Responsable :</strong> Jean Dupont</li>
-        <li><strong>Hébergeur :</strong> GitHub Pages – GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA</li>
-      </ul>
+
+      <h3>3. Limites de responsabilité</h3>
+      <p>L’application est fournie "en l’état" sans garantie d’exactitude ou d’exhaustivité des informations. L’auteur ne peut être tenu responsable des pertes liées à l’usage des données fournies.</p>
+
+      <h3>4. Politique de confidentialité</h3>
+      <p>Nous ne collectons aucune donnée personnelle. Aucune information identifiable n’est stockée. Nous pouvons utiliser des outils d’analyse anonymes pour améliorer le service, mais aucune donnée personnelle n’est collectée ni vendue.</p>
+
+      <h3>5. Mentions légales</h3>
+      <p><strong>Nom / Raison sociale :</strong> Jean Dupont<br>
+      <strong>Adresse :</strong> 10 rue Exemple, 75000 Paris, France<br>
+      <strong>Hébergeur :</strong> GitHub Pages</p>
     </div>
   </div>
 
   <script>
-    const symbolSelect = document.getElementById('symbol');
-    const chart = document.getElementById('chart');
-    const toggleThemeBtn = document.getElementById('toggle-theme');
-    const toggleLegal = document.getElementById('toggle-legal');
-    const legalSection = document.getElementById('legal-section');
-
     const exchanges = [
-      { name: 'Binance', url: s=>`https://api.binance.com/api/v3/ticker/price?symbol=${s}`, parse: res=>parseFloat(res.price) },
-      { name: 'Coinbase', url: s=>`https://api.coinbase.com/api/v2/prices/${s.replace("USDT","-USD")}/spot`, parse: res=>parseFloat(res.data.amount) },
-      { name: 'Kraken', url: s=>`https://api.kraken.com/0/public/Ticker?pair=${s==='ETHUSDT'?'XETHZUSD':'XXBTZUSD'}`, parse: res=>parseFloat(s==='ETHUSDT'?res.result.XETHZUSD.c[0]:res.result.XXBTZUSD.c[0]) },
-      { name: 'OKX', url: s=>`https://www.okx.com/api/v5/market/ticker?instId=${s.replace("USDT","-USDT")}`, parse: res=>parseFloat(res.data[0].last) },
-      { name: 'Huobi', url: s=>`https://api.huobi.pro/market/detail/merged?symbol=${s.toLowerCase()}`, parse: res=>parseFloat(res.tick.close) },
-      { name: 'Gemini', url: s=>`https://api.gemini.com/v1/pubticker/${s.replace("USDT","usd").toLowerCase()}`, parse: res=>parseFloat(res.last), only:'BTCUSDT' },
-      { name: 'Bitrue', url: s=>`https://www.bitrue.com/api/v1/ticker/price?symbol=${s}`, parse: res=>parseFloat(res.price) }
+      { name: 'Binance', url: symbol => `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`, parse: res => parseFloat(res.price) },
+      { name: 'Coinbase', url: symbol => `https://api.coinbase.com/v2/prices/${symbol.replace("USDT", "-USD")}/spot`, parse: res => parseFloat(res.data.amount) },
+      { name: 'Kraken', url: symbol => `https://api.kraken.com/0/public/Ticker?pair=${symbol === 'ETHUSDT' ? 'XETHZUSD' : 'XXBTZUSD'}`, parse: res => parseFloat(symbol === 'ETHUSDT' ? res.result.XETHZUSD.c[0] : res.result.XXBTZUSD.c[0]) },
+      { name: 'OKX', url: symbol => `https://www.okx.com/api/v5/market/ticker?instId=${symbol.replace("USDT", "-USDT")}`, parse: res => parseFloat(res.data[0].last) },
+      { name: 'Huobi', url: symbol => `https://api.huobi.pro/market/detail/merged?symbol=${symbol.toLowerCase()}`, parse: res => parseFloat(res.tick.close) },
+      { name: 'Gemini', url: symbol => `https://api.gemini.com/v1/pubticker/${symbol.replace("USDT", "usd").toLowerCase()}`, parse: res => parseFloat(res.last), only: "BTCUSDT" },
+      { name: 'Bitrue', url: symbol => `https://www.bitrue.com/api/v1/ticker/price?symbol=${symbol}`, parse: res => parseFloat(res.price) }
     ];
 
-    function updateChart(symbol){
-      chart.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE:${symbol}&interval=1&theme=${document.body.classList.contains('dark-mode')?'dark':'light'}&style=1&timezone=Europe%2FParis&withdateranges=1&hideideas=1&hidevolume=1`;
+    const symbolSelect = document.getElementById('symbol');
+    const chart = document.getElementById('chart');
+
+    function updateChart(symbol) {
+      chart.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE:${symbol}&interval=1&theme=dark&style=1&timezone=Europe%2FParis&withdateranges=1&hideideas=1&hidevolume=1`;
     }
 
-    async function updatePrices(){
+    async function updatePrices() {
       const symbol = symbolSelect.value;
-      const table = document.getElementById('price-table');
-      table.innerHTML = '';
-      const entries = [];
-      for(const ex of exchanges){
-        try{
-          if(ex.only && ex.only!==symbol) throw '';
+      const tableBody = document.getElementById('price-table');
+      tableBody.innerHTML = '';
+      const priceEntries = [];
+
+      for (const ex of exchanges) {
+        try {
+          if (ex.only && ex.only !== symbol) throw 'Not supported';
           const res = await fetch(ex.url(symbol));
           const data = await res.json();
           const price = ex.parse(data);
-          entries.push({name:ex.name, price});
-        }catch{
-          entries.push({name:ex.name, error:true});
+          priceEntries.push({ name: ex.name, price });
+        } catch {
+          priceEntries.push({ name: ex.name, error: true });
         }
       }
-      const valid = entries.filter(e=>!e.error);
-      const vals = valid.map(e=>e.price);
-      valid.sort((a,b)=>b.price-a.price);
-      valid.forEach(e=>{
-        const tr=document.createElement('tr');
-        tr.innerHTML = `<td>${e.name}</td><td class="green">${e.price.toFixed(2)}</td>`;
-        table.appendChild(tr);
-      });
-      entries.filter(e=>e.error).forEach(e=>{
-        const tr=document.createElement('tr');
-        tr.innerHTML = `<td>${e.name}</td><td class="red">Erreur</td>`;
-        table.appendChild(tr);
-      });
-      const spreadDiv = document.getElementById('spread');
-      const highDiv = document.getElementById('high');
-      const lowDiv = document.getElementById('low');
-      if(vals.length>1){
-        const max=Math.max(...vals), min=Math.min(...vals);
-        const spread=max-min, sprPct=(spread/min)*100;
-        spreadDiv.textContent = `Spread : ${spread.toFixed(2)} USDT (${sprPct.toFixed(2)}%)`;
-        highDiv.innerHTML = `Plus haut : <span class="high">${max.toFixed(2)} USDT</span>`;
-        lowDiv.innerHTML = `Plus bas : <span class="low">${min.toFixed(2)} USDT</span>`;
-      }else{
-        spreadDiv.textContent='Pas assez de données pour calculer le spread.';
-        highDiv.textContent='Plus haut : ...';
-        lowDiv.textContent='Plus bas : ...';
+
+      const validPrices = priceEntries.filter(p => !p.error);
+      const values = validPrices.map(p => p.price);
+
+      validPrices.sort((a, b) => b.price - a.price);
+
+      for (const entry of validPrices) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${entry.name}</td><td class="green">${entry.price.toFixed(2)}</td>`;
+        tableBody.appendChild(row);
       }
+
+      for (const entry of priceEntries.filter(p => p.error)) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${entry.name}</td><td class="red">Erreur</td>`;
+        tableBody.appendChild(row);
+      }
+
+      if (values.length > 1) {
+        const max = Math.max(...values);
+        const min = Math.min(...values);
+        const spread = max - min;
+        const spreadPercent = (spread / min) * 100;
+
+        document.getElementById('spread').textContent = `Spread : ${spread.toFixed(2)} USDT (${spreadPercent.toFixed(2)}%)`;
+        document.getElementById('high').textContent = `Plus haut : ${max.toFixed(2)} USDT`;
+        document.getElementById('low').textContent = `Plus bas : ${min.toFixed(2)} USDT`;
+      } else {
+        document.getElementById('spread').textContent = 'Pas assez de données pour calculer le spread.';
+        document.getElementById('high').textContent = 'Plus haut : ...';
+        document.getElementById('low').textContent = 'Plus bas : ...';
+      }
+
       document.getElementById('last-update').textContent = `Dernière mise à jour : ${new Date().toLocaleTimeString()}`;
     }
 
-    async function fetchNews(){
-      try {
-        const res = await fetch("https://corsproxy.io/?https://newsapi.org/v2/everything?q=crypto&sortBy=publishedAt&pageSize=5&apiKey=4bada77a3a104adc89e27656cfecb3a6");
-        const data = await res.json();
-        const ul = document.getElementById('news-list');
-        ul.innerHTML = '';
-        if(!data.articles) throw '';
-        data.articles.forEach(a=>{
-          const li=document.createElement('li');
-          li.innerHTML=`<a href="${a.url}" target="_blank">${a.title}</a>`;
-          ul.appendChild(li);
-        });
-      } catch {
-        document.getElementById('news-list').innerHTML = '<li>Impossible de charger les actualités.</li>';
+    async function updateNews() {
+      const newsList = document.getElementById('news-list');
+      newsList.innerHTML = '';
+      // Exemple d'actualités (à remplacer par API si souhaité)
+      const newsItems = [
+        {
+          title: "Bitcoin dépasse les 40 000 USD",
+          url: "https://www.example.com/bitcoin-40k",
+          description: "Le Bitcoin franchit un nouveau seuil historique en 2025.",
+          image: "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+          date: "2025-07-29"
+        },
+        {
+          title: "Ethereum prépare la mise à jour Shanghai",
+          url: "https://www.example.com/ethereum-shanghai",
+          description: "La communauté Ethereum se prépare à la mise à jour majeure.",
+          image: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+          date: "2025-07-28"
+        }
+      ];
+
+      for (const news of newsItems) {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <img src="${news.image}" alt="Image de l'article" />
+          <div>
+            <a href="${news.url}" target="_blank" rel="noopener">${news.title}</a>
+            <p>${news.description}</p>
+            <small>Publié le ${news.date}</small>
+          </div>
+        `;
+        newsList.appendChild(li);
       }
     }
 
-    symbolSelect.addEventListener('change', ()=>{
+    // Modal logic
+    const modalOverlay = document.getElementById('modal-overlay');
+    const openLegalBtn = document.getElementById('open-legal');
+    const closeModalBtn = modalOverlay.querySelector('.close-btn');
+
+    openLegalBtn.addEventListener('click', () => {
+      modalOverlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // Prevent background scroll
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      modalOverlay.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // Keyboard accessibility: close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+        modalOverlay.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    symbolSelect.addEventListener('change', () => {
       updateChart(symbolSelect.value);
       updatePrices();
-      fetchNews();
     });
 
-    toggleLegal.addEventListener('click', e=>{
-      e.preventDefault();
-      legalSection.style.display = legalSection.style.display==='none'?'block':'none';
-    });
-
-    toggleThemeBtn.addEventListener('click', ()=>{
-      document.body.classList.toggle('dark-mode');
-      toggleThemeBtn.textContent = document.body.classList.contains('dark-mode')?'☀️ Mode clair':'🌙 Mode sombre';
-      updateChart(symbolSelect.value);
-    });
-
+    // Initial load
     updateChart(symbolSelect.value);
     updatePrices();
-    fetchNews();
-    setInterval(()=>{
-      updatePrices();
-      fetchNews();
-    }, 60000);
+    updateNews();
   </script>
 </body>
 </html>
