@@ -184,6 +184,18 @@
     body.dark-mode #news-list small {
       color: #aaa;
     }
+
+    /* Mention légale */
+    .legal-disclaimer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+      margin-top: 40px;
+    }
+
+    body.dark-mode .legal-disclaimer {
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
@@ -221,6 +233,11 @@
     <!-- Section Actualités -->
     <h2>Actualités Crypto</h2>
     <ul id="news-list"></ul>
+
+    <!-- Mention légale -->
+    <p class="legal-disclaimer">
+      ⚠️ Les informations affichées sur ce site sont fournies à titre informatif uniquement et ne constituent pas un conseil en investissement. Veuillez faire vos propres recherches avant toute décision financière.
+    </p>
   </div>
 
   <script>
@@ -262,10 +279,8 @@
       const validPrices = priceEntries.filter(p => !p.error);
       const values = validPrices.map(p => p.price);
 
-      // Tri du plus haut au plus bas
       validPrices.sort((a, b) => b.price - a.price);
 
-      // Affichage
       for (const entry of validPrices) {
         const row = document.createElement('tr');
         row.innerHTML = `<td>${entry.name}</td><td class="green">${entry.price.toFixed(2)}</td>`;
@@ -334,7 +349,6 @@
       fetchNews();
     });
 
-    // Thème sombre
     const toggleBtn = document.getElementById('toggle-theme');
     toggleBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
@@ -342,12 +356,10 @@
       updateChart(symbolSelect.value);
     });
 
-    // Chargement initial
     updateChart(symbolSelect.value);
     updatePrices();
     fetchNews();
 
-    // Rafraichir toutes les 60 secondes
     setInterval(() => {
       updatePrices();
       fetchNews();
