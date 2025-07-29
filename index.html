@@ -305,13 +305,58 @@
     }
 
     async function fetchNews() {
-      const newsList = document.getElementById('news-list');
-      newsList.innerHTML = 'Chargement des actualités...';
+      const apiKey = "4bada77a3a104adc89e27656cfecb3a6";
+      const query = "crypto OR cryptocurrency OR bitcoin OR ethereum OR blockchain";
+      const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&pageSize=8&sortBy=publishedAt&apiKey=${apiKey}`;
 
-      const apiKey = '4bada77a3a104adc89e27656cfecb3a6';
-      const query = encodeURIComponent('crypto OR bitcoin OR ethereum');
+      try {
+        const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
+        const res = await fetch(proxyUrl);
+        const data = await res.json();
 
-      // Proxy CORS gratuit
-      const corsProxy = 'https://corsproxy.io/?';
+        if (data.status !== "ok") throw new Error("Erreur API news");
 
-     
+        const newsList = document.getElementById("news-list");
+        newsList.innerHTML = "";
+
+        data.articles.forEach(article => {
+          const li = document.createElement("li");
+          const imgUrl = article.urlToImage || "https://via.placeholder.com/120x80?text=No+Image";
+
+          li.innerHTML = `
+            <img src="${imgUrl}" alt="Image article" />
+            <div>
+              <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+                ${article.title}
+              </a>
+              <p>${article.description ? article.description : ''}</p>
+              <small>${new Date(article.publishedAt).toLocaleString()} &nbsp;—&nbsp; ${article.source.name}</small>
+            </div>
+          `;
+          newsList.appendChild(li);
+        });
+      } catch (e) {
+        console.error(e);
+        document.getElementById("news-list").innerHTML = "<li>Impossible de charger les actualités.</li>";
+      }
+    }
+
+    symbolSelect.addEventListener('change', () => {
+      updateChart(symbolSelect.value);
+      updatePrices();
+      fetchNews();
+    });
+
+    // Initialisation
+    updateChart(symbolSelect.value);
+    updatePrices();
+    fetchNews();
+
+    // Mise à jour toutes les minutes pour les prix
+    setInterval(updatePrices, 60000);
+
+    // Mise à jour toutes les heures pour les news
+    setInterval(fetchNews, 3600000);
+  </script>
+</body>
+</html>
