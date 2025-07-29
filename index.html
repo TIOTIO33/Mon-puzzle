@@ -20,7 +20,7 @@
       background: var(--bg-color) url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/e5dce12a-d25b-45ce-ad91-87776a695df5.png') no-repeat center center fixed;
       background-size: cover;
       color: var(--text-color);
-      padding: 40px 20px 120px;
+      padding: 40px 20px 160px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -150,11 +150,11 @@
     #news-list small { color: #aaa; }
 
     #legal {
-      max-width: 100%;
+      width: 100%;
       text-align: center;
       font-size: 0.85rem;
       color: #888;
-      padding: 15px 20px;
+      padding: 20px;
       background: rgba(0,0,0,0.5);
       position: fixed;
       bottom: 0;
@@ -162,32 +162,40 @@
       right: 0;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
       z-index: 1000;
-      font-family: 'Inter', sans-serif;
     }
 
     #legal details {
       margin-top: 15px;
-      text-align: left;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      color: #ccc;
-      line-height: 1.6;
+      text-align: center;
     }
 
     #legal summary {
       cursor: pointer;
       font-weight: 600;
       color: #66aaff;
+      font-size: 1rem;
+    }
+
+    #legal details[open] > div {
+      background: rgba(5, 5, 5, 0.95);
+      border-radius: 12px;
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 25px;
+      color: #ddd;
+      line-height: 1.7;
+      text-align: left;
+      font-size: 0.95rem;
     }
 
     #legal h4 {
       color: #fff;
-      margin-top: 1em;
+      margin-top: 1.2em;
     }
 
     #legal ul {
       padding-left: 1.2em;
+      margin-bottom: 1em;
     }
   </style>
 </head>
