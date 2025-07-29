@@ -9,250 +9,104 @@
     :root {
       --bg-color: #f2f2f2;
       --text-color: #111;
-      --table-bg: rgba(255, 255, 255, 0.9);
+      --table-bg: rgba(255,255,255,0.9);
       --th-bg: #eaeaea;
       --hover-bg: #ddd;
     }
-
     body.dark-mode {
       --bg-color: #0a0a0a;
       --text-color: #f1f1f1;
-      --table-bg: rgba(0, 0, 0, 0.7);
+      --table-bg: rgba(0,0,0,0.7);
       --th-bg: #1c1c1c;
       --hover-bg: #2e2e2e;
     }
-
     body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
+      margin:0;
+      font-family:'Inter', sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
-      padding: 40px 20px;
+      padding:40px 20px;
       transition: background 0.3s, color 0.3s;
     }
-
-    .container {
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-
-    #last-update {
-      text-align: center;
-      color: #888;
-      font-size: 0.9rem;
-    }
-
-    #symbol {
-      display: block;
-      margin: 20px auto;
-      padding: 10px;
-      font-size: 1rem;
-    }
-
-    .tradingview-widget {
-      max-width: 100%;
-      margin: 40px auto;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .info-panel {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      margin: 30px 0;
-      background: var(--table-bg);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-
-    .info-panel div {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin: 10px;
-    }
-
-    .high {
-      color: #00c853;
-    }
-
-    .low {
-      color: #d50000;
-    }
-
-    table {
-      width: 100%;
-      margin: 30px 0;
-      border-collapse: collapse;
-      background: var(--table-bg);
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 15px;
-      text-align: center;
-    }
-
-    th {
-      background: var(--th-bg);
-      color: var(--text-color);
-      font-weight: 600;
-    }
-
-    tr:hover {
-      background: var(--hover-bg);
-    }
-
-    td.green {
-      color: #00aa6c;
-      font-weight: 600;
-    }
-
-    td.red {
-      color: #d33;
-    }
-
-    #toggle-theme {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 8px;
-      background: #444;
-      color: #fff;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-
-    body:not(.dark-mode) #toggle-theme {
-      background: #ddd;
-      color: #111;
-    }
-
-    #news {
-      margin-top: 40px;
-      background: var(--table-bg);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-
-    #news h2 {
-      margin-bottom: 10px;
-    }
-
-    #news ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    #news li {
-      margin-bottom: 10px;
-    }
-
-    #news a {
-      color: var(--text-color);
-      text-decoration: underline;
-    }
-
-    #legal-section {
-      display: none;
-      max-width: 800px;
-      margin: 20px auto;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      background: var(--table-bg);
-      padding: 20px;
-      border-radius: 10px;
-    }
-
-    #legal-section h3 {
-      margin-top: 20px;
-    }
+    .container { max-width:1200px; margin:auto; }
+    h1 { text-align:center; font-size:2rem; margin-bottom:10px; }
+    #last-update { text-align:center; color:#888; font-size:0.9rem; }
+    #symbol { display:block; margin:20px auto; padding:10px; font-size:1rem; }
+    .tradingview-widget { max-width:100%; margin:40px auto; border:1px solid #ccc; border-radius:10px; overflow:hidden; }
+    .info-panel { display:flex; justify-content: space-around; flex-wrap:wrap; margin:30px 0; background:var(--table-bg); padding:20px; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.1); }
+    .info-panel div { font-size:1.1rem; font-weight:600; margin:10px; }
+    .high { color:#00c853; }
+    .low { color:#d50000; }
+    table { width:100%; margin:30px 0; border-collapse:collapse; background:var(--table-bg); box-shadow:0 0 20px rgba(0,0,0,0.1); border-radius:8px; overflow:hidden; }
+    th, td { padding:15px; text-align:center; }
+    th { background:var(--th-bg); color:var(--text-color); font-weight:600; }
+    tr:hover { background:var(--hover-bg); }
+    td.green { color:#00aa6c; font-weight:600; }
+    td.red { color:#d33; }
+    #toggle-theme { position:fixed; top:20px; right:20px; padding:8px 14px; border:none; border-radius:8px; background:#444; color:#fff; cursor:pointer; font-weight:bold; transition:background 0.3s; }
+    body:not(.dark-mode) #toggle-theme { background:#ddd; color:#111; }
+    #news { margin-top:40px; background:var(--table-bg); padding:20px; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.1); }
+    #news h2 { margin-bottom:10px; }
+    #news-list { list-style:none; padding-left:0; }
+    #news-list li { margin-bottom:10px; }
+    #news-list a { color: var(--text-color); text-decoration:underline; }
+    #legal-section { display:none; max-width:800px; margin:20px auto; font-size:0.9rem; line-height:1.6; background:var(--table-bg); padding:20px; border-radius:10px; }
+    #toggle-legal { font-size:0.9rem; text-decoration:underline; color:#0077cc; cursor:pointer; }
   </style>
 </head>
 <body>
   <button id="toggle-theme">🌙 Mode sombre</button>
-
   <div class="container">
-    <h1>Prix Crypto - Multi-Exchanges</h1>
+    <h1>Prix Crypto - Multi‑Exchanges</h1>
     <p id="last-update">Dernière mise à jour : ...</p>
-    <p style="text-align: center;">
-      <a href="#" id="toggle-legal" style="font-size: 0.9rem; text-decoration: underline; color: #0077cc;">Mentions légales / CGU / Confidentialité</a>
+    <p style="text-align:center;">
+      <span id="toggle-legal">Mentions légales / CGU / Confidentialité</span>
     </p>
-
     <select id="symbol">
       <option value="BTCUSDT">Bitcoin (BTC)</option>
       <option value="ETHUSDT">Ethereum (ETH)</option>
     </select>
-
     <div class="tradingview-widget">
       <iframe id="chart" src="" width="100%" height="350" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
     </div>
-
     <div class="info-panel">
       <div id="spread">Spread : ...</div>
       <div id="high">Plus haut : ...</div>
       <div id="low">Plus bas : ...</div>
     </div>
-
     <table>
-      <thead>
-        <tr>
-          <th>Exchange</th>
-          <th>Prix (USD)</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Exchange</th><th>Prix (USD)</th></tr></thead>
       <tbody id="price-table"></tbody>
     </table>
-
     <div id="news">
       <h2>📰 Actualités Crypto</h2>
       <ul id="news-list"><li>Chargement...</li></ul>
     </div>
-
     <div id="legal-section">
       <h3>Conditions Générales d’Utilisation (CGU)</h3>
-      <p>Cette application permet de comparer en temps réel les prix de cryptomonnaies (Bitcoin, Ethereum, etc.) sur plusieurs plateformes, et d’afficher les actualités liées.</p>
-
+      <p>Cette application permet de comparer les prix des cryptomonnaies (Bitcoin, Ethereum, etc.) sur plusieurs exchanges, et d’afficher des actualités crypto.</p>
       <strong>Fonctionnalités :</strong>
       <ul>
         <li>Affichage des prix en direct sur différents exchanges</li>
-        <li>Calcul du spread (écart de prix)</li>
+        <li>Calcul du spread (écart entre prix maximum et minimum)</li>
         <li>Graphique interactif via TradingView</li>
-        <li>Actualités récentes sur la crypto via NewsAPI</li>
+        <li>Actualités récentes sur la crypto (via NewsAPI)</li>
       </ul>
-
       <strong>Droits de l’utilisateur :</strong>
       <ul>
         <li>Utilisation gratuite et sans inscription</li>
         <li>L’utilisateur est responsable de ses décisions</li>
-        <li>Pas de reproduction commerciale sans autorisation</li>
+        <li>Reproduction commerciale interdite sans autorisation</li>
       </ul>
-
       <strong>Limites de responsabilité :</strong>
       <ul>
-        <li>Les données peuvent être inexactes ou incomplètes</li>
+        <li>Les données proviennent d’API tierces et peuvent être inexactes ou incomplètes</li>
         <li>Aucune garantie ni conseil financier</li>
-        <li>L’auteur décline toute responsabilité en cas de pertes</li>
+        <li>L’auteur décline toute responsabilité en cas de perte liée à son usage</li>
       </ul>
-
       <h3>Politique de Confidentialité</h3>
-      <p>L’application ne collecte aucune donnée personnelle. Aucune inscription ni cookie de tracking n’est utilisé.</p>
-      <p>Les données viennent d’API publiques (Binance, Kraken, NewsAPI, etc.).</p>
-
+      <p>Aucune donnée personnelle n’est collectée. Aucun cookie de tracking ni outil d’analyse n’est utilisé.</p>
+      <p>Les données affichées proviennent d’API publiques (Binance, Kraken, NewsAPI etc.).</p>
       <h3>Mentions légales</h3>
       <ul>
         <li><strong>Éditeur :</strong> Jean Dupont</li>
@@ -266,114 +120,108 @@
   <script>
     const symbolSelect = document.getElementById('symbol');
     const chart = document.getElementById('chart');
+    const toggleThemeBtn = document.getElementById('toggle-theme');
+    const toggleLegal = document.getElementById('toggle-legal');
+    const legalSection = document.getElementById('legal-section');
 
     const exchanges = [
-      { name: 'Binance', url: s => `https://api.binance.com/api/v3/ticker/price?symbol=${s}`, parse: res => parseFloat(res.price) },
-      { name: 'Coinbase', url: s => `https://api.coinbase.com/v2/prices/${s.replace("USDT", "-USD")}/spot`, parse: res => parseFloat(res.data.amount) },
-      { name: 'Kraken', url: s => `https://api.kraken.com/0/public/Ticker?pair=${s === 'ETHUSDT' ? 'XETHZUSD' : 'XXBTZUSD'}`, parse: res => parseFloat(s === 'ETHUSDT' ? res.result.XETHZUSD.c[0] : res.result.XXBTZUSD.c[0]) },
-      { name: 'OKX', url: s => `https://www.okx.com/api/v5/market/ticker?instId=${s.replace("USDT", "-USDT")}`, parse: res => parseFloat(res.data[0].last) },
-      { name: 'Huobi', url: s => `https://api.huobi.pro/market/detail/merged?symbol=${s.toLowerCase()}`, parse: res => parseFloat(res.tick.close) },
-      { name: 'Gemini', url: s => `https://api.gemini.com/v1/pubticker/${s.replace("USDT", "usd").toLowerCase()}`, parse: res => parseFloat(res.last), only: "BTCUSDT" },
-      { name: 'Bitrue', url: s => `https://www.bitrue.com/api/v1/ticker/price?symbol=${s}`, parse: res => parseFloat(res.price) }
+      { name: 'Binance', url: s=>`https://api.binance.com/api/v3/ticker/price?symbol=${s}`, parse: res=>parseFloat(res.price) },
+      { name: 'Coinbase', url: s=>`https://api.coinbase.com/api/v2/prices/${s.replace("USDT","-USD")}/spot`, parse: res=>parseFloat(res.data.amount) },
+      { name: 'Kraken', url: s=>`https://api.kraken.com/0/public/Ticker?pair=${s==='ETHUSDT'?'XETHZUSD':'XXBTZUSD'}`, parse: res=>parseFloat(s==='ETHUSDT'?res.result.XETHZUSD.c[0]:res.result.XXBTZUSD.c[0]) },
+      { name: 'OKX', url: s=>`https://www.okx.com/api/v5/market/ticker?instId=${s.replace("USDT","-USDT")}`, parse: res=>parseFloat(res.data[0].last) },
+      { name: 'Huobi', url: s=>`https://api.huobi.pro/market/detail/merged?symbol=${s.toLowerCase()}`, parse: res=>parseFloat(res.tick.close) },
+      { name: 'Gemini', url: s=>`https://api.gemini.com/v1/pubticker/${s.replace("USDT","usd").toLowerCase()}`, parse: res=>parseFloat(res.last), only:'BTCUSDT' },
+      { name: 'Bitrue', url: s=>`https://www.bitrue.com/api/v1/ticker/price?symbol=${s}`, parse: res=>parseFloat(res.price) }
     ];
 
-    function updateChart(symbol) {
-      chart.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE:${symbol}&interval=1&theme=${document.body.classList.contains('dark-mode') ? 'dark' : 'light'}&style=1&timezone=Europe/Paris&withdateranges=1&hideideas=1&hidevolume=1`;
+    function updateChart(symbol){
+      chart.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE:${symbol}&interval=1&theme=${document.body.classList.contains('dark-mode')?'dark':'light'}&style=1&timezone=Europe%2FParis&withdateranges=1&hideideas=1&hidevolume=1`;
     }
 
-    async function updatePrices() {
+    async function updatePrices(){
       const symbol = symbolSelect.value;
-      const tableBody = document.getElementById('price-table');
-      tableBody.innerHTML = '';
-      const priceEntries = [];
-
-      for (const ex of exchanges) {
-        try {
-          if (ex.only && ex.only !== symbol) throw 'Not supported';
+      const table = document.getElementById('price-table');
+      table.innerHTML = '';
+      const entries = [];
+      for(const ex of exchanges){
+        try{
+          if(ex.only && ex.only!==symbol) throw '';
           const res = await fetch(ex.url(symbol));
           const data = await res.json();
           const price = ex.parse(data);
-          priceEntries.push({ name: ex.name, price });
-        } catch {
-          priceEntries.push({ name: ex.name, error: true });
+          entries.push({name:ex.name, price});
+        }catch{
+          entries.push({name:ex.name, error:true});
         }
       }
-
-      const validPrices = priceEntries.filter(p => !p.error);
-      const values = validPrices.map(p => p.price);
-
-      validPrices.sort((a, b) => b.price - a.price);
-      for (const entry of validPrices) {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td>${entry.name}</td><td class="green">${entry.price.toFixed(2)}</td>`;
-        tableBody.appendChild(row);
+      const valid = entries.filter(e=>!e.error);
+      const vals = valid.map(e=>e.price);
+      valid.sort((a,b)=>b.price-a.price);
+      valid.forEach(e=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${e.name}</td><td class="green">${e.price.toFixed(2)}</td>`;
+        table.appendChild(tr);
+      });
+      entries.filter(e=>e.error).forEach(e=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${e.name}</td><td class="red">Erreur</td>`;
+        table.appendChild(tr);
+      });
+      const spreadDiv = document.getElementById('spread');
+      const highDiv = document.getElementById('high');
+      const lowDiv = document.getElementById('low');
+      if(vals.length>1){
+        const max=Math.max(...vals), min=Math.min(...vals);
+        const spread=max-min, sprPct=(spread/min)*100;
+        spreadDiv.textContent = `Spread : ${spread.toFixed(2)} USDT (${sprPct.toFixed(2)}%)`;
+        highDiv.innerHTML = `Plus haut : <span class="high">${max.toFixed(2)} USDT</span>`;
+        lowDiv.innerHTML = `Plus bas : <span class="low">${min.toFixed(2)} USDT</span>`;
+      }else{
+        spreadDiv.textContent='Pas assez de données pour calculer le spread.';
+        highDiv.textContent='Plus haut : ...';
+        lowDiv.textContent='Plus bas : ...';
       }
-
-      for (const entry of priceEntries.filter(p => p.error)) {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td>${entry.name}</td><td class="red">Erreur</td>`;
-        tableBody.appendChild(row);
-      }
-
-      if (values.length > 1) {
-        const max = Math.max(...values);
-        const min = Math.min(...values);
-        const spread = max - min;
-        const spreadPercent = (spread / min) * 100;
-        document.getElementById('spread').textContent = `Spread : ${spread.toFixed(2)} USDT (${spreadPercent.toFixed(2)}%)`;
-        document.getElementById('high').innerHTML = `Plus haut : <span class="high">${max.toFixed(2)} USDT</span>`;
-        document.getElementById('low').innerHTML = `Plus bas : <span class="low">${min.toFixed(2)} USDT</span>`;
-      } else {
-        document.getElementById('spread').textContent = 'Pas assez de données pour calculer le spread.';
-        document.getElementById('high').textContent = 'Plus haut : ...';
-        document.getElementById('low').textContent = 'Plus bas : ...';
-      }
-
       document.getElementById('last-update').textContent = `Dernière mise à jour : ${new Date().toLocaleTimeString()}`;
     }
 
-    async function fetchNews() {
+    async function fetchNews(){
       try {
         const res = await fetch("https://corsproxy.io/?https://newsapi.org/v2/everything?q=crypto&sortBy=publishedAt&pageSize=5&apiKey=4bada77a3a104adc89e27656cfecb3a6");
         const data = await res.json();
-        const list = document.getElementById("news-list");
-        list.innerHTML = "";
-
-        if (!data.articles) throw new Error("Pas d'articles");
-
-        data.articles.forEach(article => {
-          const li = document.createElement("li");
-          li.innerHTML = `<a href="${article.url}" target="_blank">${article.title}</a>`;
-          list.appendChild(li);
+        const ul = document.getElementById('news-list');
+        ul.innerHTML = '';
+        if(!data.articles) throw '';
+        data.articles.forEach(a=>{
+          const li=document.createElement('li');
+          li.innerHTML=`<a href="${a.url}" target="_blank">${a.title}</a>`;
+          ul.appendChild(li);
         });
-      } catch (e) {
-        document.getElementById("news-list").innerHTML = "<li>Impossible de charger les actualités.</li>";
+      } catch {
+        document.getElementById('news-list').innerHTML = '<li>Impossible de charger les actualités.</li>';
       }
     }
 
-    symbolSelect.addEventListener('change', () => {
+    symbolSelect.addEventListener('change', ()=>{
       updateChart(symbolSelect.value);
       updatePrices();
       fetchNews();
     });
 
-    document.getElementById("toggle-legal").addEventListener("click", (e) => {
+    toggleLegal.addEventListener('click', e=>{
       e.preventDefault();
-      const section = document.getElementById("legal-section");
-      section.style.display = section.style.display === "none" ? "block" : "none";
+      legalSection.style.display = legalSection.style.display==='none'?'block':'none';
     });
 
-    document.getElementById('toggle-theme').addEventListener('click', () => {
+    toggleThemeBtn.addEventListener('click', ()=>{
       document.body.classList.toggle('dark-mode');
-      document.getElementById('toggle-theme').textContent =
-        document.body.classList.contains('dark-mode') ? '☀️ Mode clair' : '🌙 Mode sombre';
+      toggleThemeBtn.textContent = document.body.classList.contains('dark-mode')?'☀️ Mode clair':'🌙 Mode sombre';
       updateChart(symbolSelect.value);
     });
 
     updateChart(symbolSelect.value);
     updatePrices();
     fetchNews();
-    setInterval(() => {
+    setInterval(()=>{
       updatePrices();
       fetchNews();
     }, 60000);
