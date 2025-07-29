@@ -2,32 +2,16 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Comparateur Prix Crypto</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg-color: #f2f2f2;
-      --text-color: #111;
-      --table-bg: rgba(255, 255, 255, 0.9);
-      --th-bg: #eaeaea;
-      --hover-bg: #ddd;
-    }
-
-    body.dark-mode {
-      --bg-color: #0a0a0a;
-      --text-color: #f1f1f1;
-      --table-bg: rgba(0, 0, 0, 0.7);
-      --th-bg: #1c1c1c;
-      --hover-bg: #2e2e2e;
-    }
-
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: var(--bg-color) url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/e5dce12a-d25b-45ce-ad91-87776a695df5.png') no-repeat center center fixed;
+      background: #0a0a0a url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/e5dce12a-d25b-45ce-ad91-87776a695df5.png') no-repeat center center fixed;
       background-size: cover;
-      color: var(--text-color);
+      color: #f1f1f1;
       padding: 40px 20px;
       transition: background 0.3s, color 0.3s;
     }
@@ -37,15 +21,23 @@
       margin: auto;
     }
 
-    h1 {
+    h1, h2 {
       text-align: center;
+    }
+
+    h1 {
       font-size: 2rem;
       margin-bottom: 10px;
     }
 
+    h2 {
+      margin-top: 50px;
+      font-size: 1.8rem;
+    }
+
     #last-update {
       text-align: center;
-      color: #888;
+      color: #ccc;
       font-size: 0.9rem;
     }
 
@@ -59,7 +51,7 @@
     .tradingview-widget {
       max-width: 100%;
       margin: 40px auto;
-      border: 1px solid #ccc;
+      border: 1px solid #333;
       border-radius: 10px;
       overflow: hidden;
     }
@@ -69,10 +61,10 @@
       justify-content: space-around;
       flex-wrap: wrap;
       margin: 30px 0;
-      background: var(--table-bg);
+      background: rgba(0, 0, 0, 0.7);
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
 
     .info-panel div {
@@ -81,15 +73,20 @@
       margin: 10px;
     }
 
-    .high { color: #00c853; }
-    .low { color: #d50000; }
+    .high {
+      color: #00c853;
+    }
+
+    .low {
+      color: #d50000;
+    }
 
     table {
       width: 100%;
       margin: 30px 0;
       border-collapse: collapse;
-      background: var(--table-bg);
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
       border-radius: 8px;
       overflow: hidden;
     }
@@ -100,13 +97,13 @@
     }
 
     th {
-      background: var(--th-bg);
-      color: var(--text-color);
+      background: #1c1c1c;
+      color: #f1f1f1;
       font-weight: 600;
     }
 
     tr:hover {
-      background: var(--hover-bg);
+      background: #2e2e2e;
     }
 
     td.green {
@@ -115,32 +112,7 @@
     }
 
     td.red {
-      color: #d33;
-    }
-
-    #toggle-theme {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 8px;
-      background: #444;
-      color: #fff;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-
-    body:not(.dark-mode) #toggle-theme {
-      background: #ddd;
-      color: #111;
-    }
-
-    h2 {
-      text-align: center;
-      margin-top: 50px;
-      font-size: 1.8rem;
+      color: #ff6666;
     }
 
     #news-list {
@@ -148,7 +120,7 @@
       margin: 20px auto 60px;
       list-style: none;
       padding-left: 0;
-      color: var(--text-color);
+      color: #f1f1f1;
     }
 
     #news-list li {
@@ -157,7 +129,7 @@
 
     #news-list a {
       font-weight: 600;
-      color: #0066cc;
+      color: #66aaff;
       text-decoration: none;
     }
 
@@ -168,28 +140,22 @@
     #news-list small {
       display: block;
       margin-top: 4px;
-      color: #666;
+      color: #aaa;
     }
 
-    body.dark-mode #news-list a { color: #66aaff; }
-    body.dark-mode #news-list small { color: #aaa; }
-
-    footer {
+    .legal-disclaimer {
       text-align: center;
-      margin-top: 60px;
-      font-size: 0.8rem;
-      color: #888;
+      font-size: 0.85rem;
+      color: #aaa;
+      margin-top: 40px;
       max-width: 800px;
       margin-left: auto;
       margin-right: auto;
+      padding: 0 10px;
     }
-
-    body.dark-mode footer { color: #666; }
   </style>
 </head>
 <body>
-  <button id="toggle-theme">🌙 Mode sombre</button>
-
   <div class="container">
     <h1>Prix Crypto - Multi-Exchanges</h1>
     <p id="last-update">Dernière mise à jour : </p>
@@ -219,14 +185,15 @@
       <tbody id="price-table"></tbody>
     </table>
 
-    <h2>Actualités Crypto – Dernières 12 heures</h2>
+    <!-- Section Actualités -->
+    <h2>Actualités Crypto</h2>
     <ul id="news-list"></ul>
-  </div>
 
-  <footer>
-    ⚠️ Ceci n’est pas un conseil en investissement. Les données affichées sont fournies à titre informatif uniquement et peuvent contenir des erreurs. Faites toujours vos propres recherches.  
-    <br>⚠️ This is not investment advice. The displayed data is for informational purposes only and may contain errors. Always do your own research.
-  </footer>
+    <!-- Phrase légale -->
+    <p class="legal-disclaimer">
+      ⚠️ Ce site est uniquement à titre informatif et ne constitue pas un conseil en investissement. Investissez prudemment.
+    </p>
+  </div>
 
   <script>
     const exchanges = [
@@ -243,7 +210,7 @@
     const chart = document.getElementById('chart');
 
     function updateChart(symbol) {
-      chart.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE:${symbol}&interval=1&theme=${document.body.classList.contains('dark-mode') ? 'dark' : 'light'}&style=1&timezone=Europe%2FParis&withdateranges=1&hideideas=1&hidevolume=1`;
+      chart.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE:${symbol}&interval=1&theme=dark&style=1&timezone=Europe%2FParis&withdateranges=1&hideideas=1&hidevolume=1`;
     }
 
     async function updatePrices() {
@@ -267,8 +234,10 @@
       const validPrices = priceEntries.filter(p => !p.error);
       const values = validPrices.map(p => p.price);
 
+      // Tri du plus haut au plus bas
       validPrices.sort((a, b) => b.price - a.price);
 
+      // Affichage
       for (const entry of validPrices) {
         const row = document.createElement('tr');
         row.innerHTML = `<td>${entry.name}</td><td class="green">${entry.price.toFixed(2)}</td>`;
@@ -301,36 +270,32 @@
 
     async function fetchNews() {
       const apiKey = "4bada77a3a104adc89e27656cfecb3a6";
-      const query = `"crypto" OR "cryptocurrency" OR "bitcoin" OR "ethereum" OR "blockchain"`;
-      const fromDate = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
-      const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&from=${fromDate}&pageSize=8&sortBy=publishedAt&apiKey=${apiKey}`;
+      const query = "crypto OR cryptocurrency OR bitcoin OR ethereum OR blockchain";
+      const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&pageSize=8&sortBy=publishedAt&apiKey=${apiKey}`;
 
       try {
         const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
         const res = await fetch(proxyUrl);
         const data = await res.json();
 
+        if (data.status !== "ok") throw new Error("Erreur API news");
+
         const newsList = document.getElementById("news-list");
         newsList.innerHTML = "";
 
-        if (data.status !== "ok" || !data.articles.length) {
-          newsList.innerHTML = "<li>Aucune actualité crypto trouvée dans les dernières 12 heures.</li>";
-          return;
-        }
-
         data.articles.forEach(article => {
           const li = document.createElement("li");
+          li.style.marginBottom = "1em";
           li.innerHTML = `
-            <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+            <a href="${article.url}" target="_blank" rel="noopener noreferrer" style="font-weight:600; color:#66aaff;">
               ${article.title}
             </a><br>
-            <small>${new Date(article.publishedAt).toLocaleString()} – ${article.source.name}</small>
+            <small>${new Date(article.publishedAt).toLocaleString()} - ${article.source.name}</small>
           `;
           newsList.appendChild(li);
         });
-
       } catch (e) {
-        console.error("Erreur chargement news :", e);
+        console.error(e);
         document.getElementById("news-list").innerHTML = "<li>Impossible de charger les actualités.</li>";
       }
     }
@@ -341,17 +306,12 @@
       fetchNews();
     });
 
-    const toggleBtn = document.getElementById('toggle-theme');
-    toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      toggleBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Mode clair' : '🌙 Mode sombre';
-      updateChart(symbolSelect.value);
-    });
-
+    // Chargement initial
     updateChart(symbolSelect.value);
     updatePrices();
     fetchNews();
 
+    // Rafraîchir toutes les 60 secondes
     setInterval(() => {
       updatePrices();
       fetchNews();
