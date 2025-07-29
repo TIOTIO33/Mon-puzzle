@@ -2,106 +2,116 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comparateur Prix Crypto</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comparateur Crypto - Mode Sombre</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg-color: #0a0a0a;
       --text-color: #f1f1f1;
-      --table-bg: rgba(0, 0, 0, 0.7);
+      --table-bg: rgba(20, 20, 20, 0.8);
       --th-bg: #1c1c1c;
       --hover-bg: #2e2e2e;
+      --accent-green: #00c853;
+      --accent-red: #d50000;
+      --accent-blue: #66aaff;
     }
 
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: var(--bg-color) url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/e5dce12a-d25b-45ce-ad91-87776a695df5.png') no-repeat center center fixed;
-      background-size: cover;
+      background: var(--bg-color);
       color: var(--text-color);
-      padding: 40px 20px 80px;
-      transition: background 0.3s, color 0.3s;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: auto;
       flex-grow: 1;
     }
 
     h1 {
       text-align: center;
-      font-size: 2rem;
+      font-weight: 600;
       margin-bottom: 10px;
     }
 
     #last-update {
       text-align: center;
-      color: #888;
       font-size: 0.9rem;
+      color: #999;
+      margin-bottom: 20px;
     }
 
-    #symbol {
+    select#symbol {
       display: block;
-      margin: 20px auto;
-      padding: 10px;
+      margin: 0 auto 30px;
+      padding: 10px 15px;
       font-size: 1rem;
-      background: #222;
-      color: #eee;
-      border: 1px solid #444;
       border-radius: 6px;
+      border: none;
+      background: #222;
+      color: var(--text-color);
+      cursor: pointer;
     }
 
-    .tradingview-widget {
+    .chart-container {
       max-width: 100%;
-      margin: 40px auto;
+      margin: 0 auto 30px;
       border: 1px solid #444;
       border-radius: 10px;
       overflow: hidden;
-      background: #121212;
+      height: 350px;
+    }
+
+    .chart-container iframe {
+      width: 100%;
+      height: 350px;
+      border: none;
     }
 
     .info-panel {
       display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      margin: 30px 0;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+      font-weight: 600;
+      font-size: 1.1rem;
       background: var(--table-bg);
-      padding: 20px;
+      padding: 15px 25px;
       border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.05);
     }
 
     .info-panel div {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin: 10px;
+      min-width: 120px;
+      text-align: center;
     }
 
     .high {
-      color: #00c853;
+      color: var(--accent-green);
     }
 
     .low {
-      color: #d50000;
+      color: var(--accent-red);
     }
 
     table {
       width: 100%;
-      margin: 30px 0;
       border-collapse: collapse;
       background: var(--table-bg);
-      box-shadow: 0 0 20px rgba(255,255,255,0.05);
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 0 20px rgba(255,255,255,0.05);
+      margin-bottom: 40px;
     }
 
     th, td {
-      padding: 15px;
+      padding: 14px 10px;
       text-align: center;
       color: var(--text-color);
     }
@@ -109,104 +119,105 @@
     th {
       background: var(--th-bg);
       font-weight: 600;
+      font-size: 1rem;
     }
 
-    tr:hover {
+    tbody tr:hover {
       background: var(--hover-bg);
     }
 
     td.green {
-      color: #00aa6c;
+      color: var(--accent-green);
       font-weight: 600;
     }
 
     td.red {
-      color: #d33;
+      color: var(--accent-red);
+      font-weight: 600;
     }
 
     h2 {
       text-align: center;
-      margin-top: 50px;
-      font-size: 1.8rem;
-      color: var(--text-color);
+      margin-bottom: 20px;
+      font-weight: 600;
+      font-size: 1.6rem;
     }
 
-    #news-list {
+    ul#news-list {
       max-width: 800px;
-      margin: 20px auto 60px;
-      list-style: none;
+      margin: 0 auto 80px;
       padding-left: 0;
-      color: var(--text-color);
+      list-style: none;
     }
 
-    #news-list li {
-      margin-bottom: 1.5em;
-      padding: 10px;
-      background: rgba(20, 20, 20, 0.7);
+    ul#news-list li {
+      background: rgba(30, 30, 30, 0.8);
       border-radius: 8px;
+      margin-bottom: 18px;
       display: flex;
       gap: 15px;
+      padding: 15px;
       align-items: flex-start;
     }
 
-    #news-list img {
-      object-fit: cover;
-      border-radius: 5px;
-      flex-shrink: 0;
+    ul#news-list img {
       width: 120px;
       height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
     }
 
-    #news-list a {
+    ul#news-list a {
       font-weight: 600;
-      color: #66aaff;
+      color: var(--accent-blue);
       text-decoration: none;
       font-size: 1.1rem;
     }
 
-    #news-list a:hover {
+    ul#news-list a:hover {
       text-decoration: underline;
     }
 
-    #news-list p {
-      margin: 8px 0;
+    ul#news-list p {
+      margin: 6px 0 8px;
       font-size: 0.9rem;
-      color: #ddd;
+      color: #ccc;
     }
 
-    #news-list small {
-      color: #aaa;
+    ul#news-list small {
+      color: #888;
+      font-size: 0.8rem;
     }
 
     #legal {
-      max-width: 100%;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #888;
-      padding: 15px 20px;
-      background: rgba(0,0,0,0.5);
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
-      z-index: 1000;
+      background: rgba(0,0,0,0.6);
+      text-align: center;
+      padding: 12px 15px;
+      font-size: 0.8rem;
+      color: #777;
       font-family: 'Inter', sans-serif;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
+      z-index: 9999;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Prix Crypto - Multi-Exchanges</h1>
-    <p id="last-update">Dernière mise à jour : </p>
+    <h1>Comparateur Crypto - Prix & News</h1>
+    <p id="last-update">Dernière mise à jour : --:--:--</p>
 
     <select id="symbol" aria-label="Choisir une crypto-monnaie">
       <option value="BTCUSDT">Bitcoin (BTC)</option>
       <option value="ETHUSDT">Ethereum (ETH)</option>
     </select>
 
-    <div class="tradingview-widget">
-      <iframe id="chart" src="" width="100%" height="350" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+    <div class="chart-container">
+      <iframe id="chart" src="" title="Graphique TradingView"></iframe>
     </div>
 
     <div class="info-panel">
@@ -225,27 +236,63 @@
       <tbody id="price-table"></tbody>
     </table>
 
-    <h2>Actualités Crypto</h2>
-    <ul id="news-list"></ul>
+    <h2>Actualités Crypto Récentes</h2>
+    <ul id="news-list">
+      <li>Chargement des actualités...</li>
+    </ul>
   </div>
 
   <p id="legal">
-    Ce site est uniquement à but informatif et ne constitue en aucun cas un conseil en investissement. Investissez de manière responsable.
+    Ce site est uniquement à but informatif et ne constitue pas un conseil en investissement. Investissez de manière responsable.
   </p>
 
   <script>
     const exchanges = [
-      { name: 'Binance', url: symbol => `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`, parse: res => parseFloat(res.price) },
-      { name: 'Coinbase', url: symbol => `https://api.coinbase.com/v2/prices/${symbol.replace("USDT", "-USD")}/spot`, parse: res => parseFloat(res.data.amount) },
-      { name: 'Kraken', url: symbol => `https://api.kraken.com/0/public/Ticker?pair=${symbol === 'ETHUSDT' ? 'XETHZUSD' : 'XXBTZUSD'}`, parse: res => parseFloat(symbol === 'ETHUSDT' ? res.result.XETHZUSD.c[0] : res.result.XXBTZUSD.c[0]) },
-      { name: 'OKX', url: symbol => `https://www.okx.com/api/v5/market/ticker?instId=${symbol.replace("USDT", "-USDT")}`, parse: res => parseFloat(res.data[0].last) },
-      { name: 'Huobi', url: symbol => `https://api.huobi.pro/market/detail/merged?symbol=${symbol.toLowerCase()}`, parse: res => parseFloat(res.tick.close) },
-      { name: 'Gemini', url: symbol => `https://api.gemini.com/v1/pubticker/${symbol.replace("USDT", "usd").toLowerCase()}`, parse: res => parseFloat(res.last), only: "BTCUSDT" },
-      { name: 'Bitrue', url: symbol => `https://www.bitrue.com/api/v1/ticker/price?symbol=${symbol}`, parse: res => parseFloat(res.price) }
+      {
+        name: 'Binance',
+        url: symbol => `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`,
+        parse: res => parseFloat(res.price)
+      },
+      {
+        name: 'Coinbase',
+        url: symbol => `https://api.coinbase.com/v2/prices/${symbol.replace("USDT", "-USD")}/spot`,
+        parse: res => parseFloat(res.data.amount)
+      },
+      {
+        name: 'Kraken',
+        url: symbol => {
+          // Kraken utilise un code différent pour ETH et BTC
+          if (symbol === 'ETHUSDT') return `https://api.kraken.com/0/public/Ticker?pair=XETHZUSD`;
+          if (symbol === 'BTCUSDT') return `https://api.kraken.com/0/public/Ticker?pair=XXBTZUSD`;
+          return '';
+        },
+        parse: (res, symbol) => {
+          if (!res.result) throw new Error("Pas de résultat Kraken");
+          if (symbol === 'ETHUSDT') return parseFloat(res.result.XETHZUSD.c[0]);
+          if (symbol === 'BTCUSDT') return parseFloat(res.result.XXBTZUSD.c[0]);
+          return null;
+        }
+      },
+      {
+        name: 'OKX',
+        url: symbol => `https://www.okx.com/api/v5/market/ticker?instId=${symbol.replace("USDT", "-USDT")}`,
+        parse: res => parseFloat(res.data[0].last)
+      },
+      {
+        name: 'Huobi',
+        url: symbol => `https://api.huobi.pro/market/detail/merged?symbol=${symbol.toLowerCase()}`,
+        parse: res => parseFloat(res.tick.close)
+      }
     ];
 
     const symbolSelect = document.getElementById('symbol');
     const chart = document.getElementById('chart');
+    const priceTable = document.getElementById('price-table');
+    const spreadElem = document.getElementById('spread');
+    const highElem = document.getElementById('high');
+    const lowElem = document.getElementById('low');
+    const lastUpdateElem = document.getElementById('last-update');
+    const newsList = document.getElementById('news-list');
 
     function updateChart(symbol) {
       chart.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE:${symbol}&interval=1&theme=dark&style=1&timezone=Europe%2FParis&withdateranges=1&hideideas=1&hidevolume=1`;
@@ -253,16 +300,15 @@
 
     async function updatePrices() {
       const symbol = symbolSelect.value;
-      const tableBody = document.getElementById('price-table');
-      tableBody.innerHTML = '';
+      priceTable.innerHTML = '';
       const priceEntries = [];
 
       for (const ex of exchanges) {
         try {
-          if (ex.only && ex.only !== symbol) throw 'Not supported';
           const res = await fetch(ex.url(symbol));
           const data = await res.json();
-          const price = ex.parse(data);
+          const price = ex.name === 'Kraken' ? ex.parse(data, symbol) : ex.parse(data);
+          if (!price || isNaN(price)) throw new Error("Prix invalide");
           priceEntries.push({ name: ex.name, price });
         } catch {
           priceEntries.push({ name: ex.name, error: true });
@@ -274,17 +320,17 @@
 
       validPrices.sort((a, b) => b.price - a.price);
 
-      for (const entry of validPrices) {
+      validPrices.forEach(entry => {
         const row = document.createElement('tr');
         row.innerHTML = `<td>${entry.name}</td><td class="green">${entry.price.toFixed(2)}</td>`;
-        tableBody.appendChild(row);
-      }
+        priceTable.appendChild(row);
+      });
 
-      for (const entry of priceEntries.filter(p => p.error)) {
+      priceEntries.filter(p => p.error).forEach(entry => {
         const row = document.createElement('tr');
         row.innerHTML = `<td>${entry.name}</td><td class="red">Erreur</td>`;
-        tableBody.appendChild(row);
-      }
+        priceTable.appendChild(row);
+      });
 
       if (values.length > 1) {
         const max = Math.max(...values);
@@ -292,16 +338,16 @@
         const spread = max - min;
         const spreadPercent = (spread / min) * 100;
 
-        document.getElementById('spread').textContent = `Spread : ${spread.toFixed(2)} USDT (${spreadPercent.toFixed(2)}%)`;
-        document.getElementById('high').textContent = `Plus haut : ${max.toFixed(2)} USDT`;
-        document.getElementById('low').textContent = `Plus bas : ${min.toFixed(2)} USDT`;
+        spreadElem.textContent = `Spread : ${spread.toFixed(2)} USDT (${spreadPercent.toFixed(2)}%)`;
+        highElem.textContent = `Plus haut : ${max.toFixed(2)} USDT`;
+        lowElem.textContent = `Plus bas : ${min.toFixed(2)} USDT`;
       } else {
-        document.getElementById('spread').textContent = 'Pas assez de données pour calculer le spread.';
-        document.getElementById('high').textContent = 'Plus haut : ...';
-        document.getElementById('low').textContent = 'Plus bas : ...';
+        spreadElem.textContent = 'Pas assez de données pour calculer le spread.';
+        highElem.textContent = 'Plus haut : ...';
+        lowElem.textContent = 'Plus bas : ...';
       }
 
-      document.getElementById('last-update').textContent = `Dernière mise à jour : ${new Date().toLocaleTimeString()}`;
+      lastUpdateElem.textContent = `Dernière mise à jour : ${new Date().toLocaleTimeString()}`;
     }
 
     async function fetchNews() {
@@ -310,13 +356,13 @@
       const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&pageSize=8&sortBy=publishedAt&apiKey=${apiKey}`;
 
       try {
+        // Utiliser un proxy CORS si nécessaire
         const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
         const res = await fetch(proxyUrl);
         const data = await res.json();
 
         if (data.status !== "ok") throw new Error("Erreur API news");
 
-        const newsList = document.getElementById("news-list");
         newsList.innerHTML = "";
 
         data.articles.forEach(article => {
@@ -326,10 +372,8 @@
           li.innerHTML = `
             <img src="${imgUrl}" alt="Image article" />
             <div>
-              <a href="${article.url}" target="_blank" rel="noopener noreferrer">
-                ${article.title}
-              </a>
-              <p>${article.description ? article.description : ''}</p>
+              <a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a>
+              <p>${article.description || ""}</p>
               <small>${new Date(article.publishedAt).toLocaleString()} &nbsp;—&nbsp; ${article.source.name}</small>
             </div>
           `;
@@ -337,7 +381,7 @@
         });
       } catch (e) {
         console.error(e);
-        document.getElementById("news-list").innerHTML = "<li>Impossible de charger les actualités.</li>";
+        newsList.innerHTML = "<li>Impossible de charger les actualités.</li>";
       }
     }
 
@@ -347,15 +391,15 @@
       fetchNews();
     });
 
-    // Initialisation
+    // Chargement initial
     updateChart(symbolSelect.value);
     updatePrices();
     fetchNews();
 
-    // Mise à jour toutes les minutes pour les prix
+    // Actualiser les prix toutes les minutes (60 000 ms)
     setInterval(updatePrices, 60000);
 
-    // Mise à jour toutes les heures pour les news
+    // Actualiser les news toutes les heures (3 600 000 ms)
     setInterval(fetchNews, 3600000);
   </script>
 </body>
