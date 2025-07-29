@@ -81,13 +81,8 @@
       margin: 10px;
     }
 
-    .high {
-      color: #00c853;
-    }
-
-    .low {
-      color: #d50000;
-    }
+    .high { color: #00c853; }
+    .low { color: #d50000; }
 
     table {
       width: 100%;
@@ -176,24 +171,20 @@
       color: #666;
     }
 
-    body.dark-mode #news-list a {
-      color: #66aaff;
-    }
+    body.dark-mode #news-list a { color: #66aaff; }
+    body.dark-mode #news-list small { color: #aaa; }
 
-    body.dark-mode #news-list small {
-      color: #aaa;
-    }
-
-    .legal-disclaimer {
+    footer {
       text-align: center;
-      font-size: 0.85rem;
-      color: #777;
-      margin-top: 40px;
+      margin-top: 60px;
+      font-size: 0.8rem;
+      color: #888;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    body.dark-mode .legal-disclaimer {
-      color: #aaa;
-    }
+    body.dark-mode footer { color: #666; }
   </style>
 </head>
 <body>
@@ -228,15 +219,14 @@
       <tbody id="price-table"></tbody>
     </table>
 
-    <!-- Section Actualités -->
-    <h2>Actualités Crypto – Dernières 12h (FR / EN)</h2>
+    <h2>Actualités Crypto – Dernières 12 heures</h2>
     <ul id="news-list"></ul>
-
-    <!-- Mention légale -->
-    <p class="legal-disclaimer">
-      ⚠️ Les informations affichées sur ce site sont fournies à titre informatif uniquement et ne constituent pas un conseil en investissement. Veuillez faire vos propres recherches avant toute décision financière.
-    </p>
   </div>
+
+  <footer>
+    ⚠️ Ceci n’est pas un conseil en investissement. Les données affichées sont fournies à titre informatif uniquement et peuvent contenir des erreurs. Faites toujours vos propres recherches.  
+    <br>⚠️ This is not investment advice. The displayed data is for informational purposes only and may contain errors. Always do your own research.
+  </footer>
 
   <script>
     const exchanges = [
@@ -276,6 +266,7 @@
 
       const validPrices = priceEntries.filter(p => !p.error);
       const values = validPrices.map(p => p.price);
+
       validPrices.sort((a, b) => b.price - a.price);
 
       for (const entry of validPrices) {
@@ -310,7 +301,7 @@
 
     async function fetchNews() {
       const apiKey = "4bada77a3a104adc89e27656cfecb3a6";
-      const query = "crypto OR cryptocurrency OR bitcoin OR ethereum OR blockchain";
+      const query = `"crypto" OR "cryptocurrency" OR "bitcoin" OR "ethereum" OR "blockchain"`;
       const fromDate = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
       const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&from=${fromDate}&pageSize=8&sortBy=publishedAt&apiKey=${apiKey}`;
 
@@ -319,29 +310,27 @@
         const res = await fetch(proxyUrl);
         const data = await res.json();
 
-        if (data.status !== "ok") throw new Error("Erreur API news");
-
         const newsList = document.getElementById("news-list");
         newsList.innerHTML = "";
 
-        if (data.articles.length === 0) {
-          newsList.innerHTML = "<li>Aucune actualité récente disponible (12 dernières heures).</li>";
+        if (data.status !== "ok" || !data.articles.length) {
+          newsList.innerHTML = "<li>Aucune actualité crypto trouvée dans les dernières 12 heures.</li>";
           return;
         }
 
         data.articles.forEach(article => {
           const li = document.createElement("li");
-          li.style.marginBottom = "1em";
           li.innerHTML = `
-            <a href="${article.url}" target="_blank" rel="noopener noreferrer" style="font-weight:600; color:#0066cc;">
+            <a href="${article.url}" target="_blank" rel="noopener noreferrer">
               ${article.title}
             </a><br>
-            <small>${new Date(article.publishedAt).toLocaleString()} - ${article.source.name}</small>
+            <small>${new Date(article.publishedAt).toLocaleString()} – ${article.source.name}</small>
           `;
           newsList.appendChild(li);
         });
+
       } catch (e) {
-        console.error(e);
+        console.error("Erreur chargement news :", e);
         document.getElementById("news-list").innerHTML = "<li>Impossible de charger les actualités.</li>";
       }
     }
