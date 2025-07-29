@@ -20,8 +20,7 @@
       background: var(--bg-color) url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/e5dce12a-d25b-45ce-ad91-87776a695df5.png') no-repeat center center fixed;
       background-size: cover;
       color: var(--text-color);
-      padding: 40px 20px 80px;
-      transition: background 0.3s, color 0.3s;
+      padding: 40px 20px 120px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -33,7 +32,7 @@
       flex-grow: 1;
     }
 
-    h1 {
+    h1, h2 {
       text-align: center;
       font-size: 2rem;
       margin-bottom: 10px;
@@ -82,13 +81,8 @@
       margin: 10px;
     }
 
-    .high {
-      color: #00c853;
-    }
-
-    .low {
-      color: #d50000;
-    }
+    .high { color: #00c853; }
+    .low { color: #d50000; }
 
     table {
       width: 100%;
@@ -106,37 +100,16 @@
       color: var(--text-color);
     }
 
-    th {
-      background: var(--th-bg);
-      font-weight: 600;
-    }
-
-    tr:hover {
-      background: var(--hover-bg);
-    }
-
-    td.green {
-      color: #00aa6c;
-      font-weight: 600;
-    }
-
-    td.red {
-      color: #d33;
-    }
-
-    h2 {
-      text-align: center;
-      margin-top: 50px;
-      font-size: 1.8rem;
-      color: var(--text-color);
-    }
+    th { background: var(--th-bg); font-weight: 600; }
+    tr:hover { background: var(--hover-bg); }
+    td.green { color: #00aa6c; font-weight: 600; }
+    td.red { color: #d33; }
 
     #news-list {
       max-width: 800px;
       margin: 20px auto 60px;
       list-style: none;
       padding-left: 0;
-      color: var(--text-color);
     }
 
     #news-list li {
@@ -174,9 +147,7 @@
       color: #ddd;
     }
 
-    #news-list small {
-      color: #aaa;
-    }
+    #news-list small { color: #aaa; }
 
     #legal {
       max-width: 100%;
@@ -192,6 +163,31 @@
       box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
       z-index: 1000;
       font-family: 'Inter', sans-serif;
+    }
+
+    #legal details {
+      margin-top: 15px;
+      text-align: left;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    #legal summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #66aaff;
+    }
+
+    #legal h4 {
+      color: #fff;
+      margin-top: 1em;
+    }
+
+    #legal ul {
+      padding-left: 1.2em;
     }
   </style>
 </head>
@@ -229,9 +225,43 @@
     <ul id="news-list"></ul>
   </div>
 
-  <p id="legal">
-    Ce site est uniquement à but informatif et ne constitue en aucun cas un conseil en investissement. Investissez de manière responsable.
-  </p>
+  <div id="legal">
+    <p>
+      Ce site est uniquement à but informatif et ne constitue en aucun cas un conseil en investissement. Investissez de manière responsable.
+    </p>
+
+    <details>
+      <summary>Mentions légales, CGU et Politique de confidentialité</summary>
+      <div>
+        <h4>Conditions Générales d’Utilisation (CGU)</h4>
+        <p>En accédant à ce site, vous acceptez les présentes Conditions Générales d’Utilisation.</p>
+        <ul>
+          <li><strong>Objectif :</strong> Fournir des informations sur les prix des crypto-monnaies.</li>
+          <li><strong>Responsabilité :</strong> Les données affichées sont issues de sources externes, sans garantie d'exactitude ou de mise à jour.</li>
+          <li><strong>Accès :</strong> Le site est gratuit et accessible sans inscription.</li>
+          <li><strong>Propriété :</strong> Les contenus sont protégés par le droit d’auteur.</li>
+        </ul>
+
+        <h4>Mentions légales</h4>
+        <ul>
+          <li><strong>Éditeur :</strong> Crypto Moniteur</li>
+          <li><strong>Contact :</strong> tiotio33[at]github.io</li>
+          <li><strong>Hébergeur :</strong> GitHub Pages — github.com</li>
+          <li><strong>Responsable de publication :</strong> tiotio33</li>
+        </ul>
+
+        <h4>Politique de confidentialité</h4>
+        <ul>
+          <li><strong>Données personnelles :</strong> Aucune donnée personnelle n’est collectée.</li>
+          <li><strong>Cookies :</strong> Seuls des cookies techniques peuvent être utilisés.</li>
+          <li><strong>Services tiers :</strong> Les API (Binance, Coinbase...) et les actualités utilisent des services externes pouvant avoir leurs propres politiques.</li>
+          <li><strong>RGPD :</strong> Aucun traitement de données personnelles — aucun formulaire ni compte requis.</li>
+        </ul>
+
+        <p>Pour toute question, contactez-nous par GitHub ou à l'adresse e-mail ci-dessus.</p>
+      </div>
+    </details>
+  </div>
 
   <script>
     const exchanges = [
@@ -347,15 +377,11 @@
       fetchNews();
     });
 
-    // Initialisation
     updateChart(symbolSelect.value);
     updatePrices();
     fetchNews();
 
-    // Mise à jour toutes les minutes pour les prix
     setInterval(updatePrices, 60000);
-
-    // Mise à jour toutes les heures pour les news
     setInterval(fetchNews, 3600000);
   </script>
 </body>
