@@ -82,11 +82,11 @@
     }
 
     .high {
-      color: #00c853; /* vert */
+      color: #00c853;
     }
 
     .low {
-      color: #d50000; /* rouge */
+      color: #d50000;
     }
 
     table {
@@ -142,7 +142,6 @@
       color: #111;
     }
 
-    /* Styles pour la section news */
     h2 {
       text-align: center;
       margin-top: 50px;
@@ -185,7 +184,6 @@
       color: #aaa;
     }
 
-    /* Mention légale */
     .legal-disclaimer {
       text-align: center;
       font-size: 0.85rem;
@@ -231,7 +229,7 @@
     </table>
 
     <!-- Section Actualités -->
-    <h2>Actualités Crypto</h2>
+    <h2>Actualités Crypto – Dernières 12h (FR / EN)</h2>
     <ul id="news-list"></ul>
 
     <!-- Mention légale -->
@@ -278,7 +276,6 @@
 
       const validPrices = priceEntries.filter(p => !p.error);
       const values = validPrices.map(p => p.price);
-
       validPrices.sort((a, b) => b.price - a.price);
 
       for (const entry of validPrices) {
@@ -314,7 +311,8 @@
     async function fetchNews() {
       const apiKey = "4bada77a3a104adc89e27656cfecb3a6";
       const query = "crypto OR cryptocurrency OR bitcoin OR ethereum OR blockchain";
-      const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&pageSize=8&sortBy=publishedAt&apiKey=${apiKey}`;
+      const fromDate = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
+      const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&from=${fromDate}&pageSize=8&sortBy=publishedAt&apiKey=${apiKey}`;
 
       try {
         const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
@@ -325,6 +323,11 @@
 
         const newsList = document.getElementById("news-list");
         newsList.innerHTML = "";
+
+        if (data.articles.length === 0) {
+          newsList.innerHTML = "<li>Aucune actualité récente disponible (12 dernières heures).</li>";
+          return;
+        }
 
         data.articles.forEach(article => {
           const li = document.createElement("li");
