@@ -193,65 +193,6 @@
       z-index: 1000;
       font-family: 'Inter', sans-serif;
     }
-
-    #legal a {
-      color: #66aaff;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-
-    /* Modal styles */
-    #modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
-      z-index: 1500;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    #modal {
-      background: #121212;
-      border-radius: 12px;
-      max-width: 700px;
-      max-height: 80vh;
-      overflow-y: auto;
-      padding: 25px 30px;
-      color: #ddd;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      box-shadow: 0 0 15px rgba(0,0,0,0.7);
-      position: relative;
-    }
-
-    #modal h2 {
-      color: #66aaff;
-      margin-top: 0;
-      font-size: 1.4rem;
-    }
-
-    #modal button.close-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
-      color: #66aaff;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    #modal button.close-btn:hover {
-      color: #aaddff;
-    }
-
-    #modal p, #modal ul {
-      margin-bottom: 1rem;
-    }
   </style>
 </head>
 <body>
@@ -289,38 +230,8 @@
   </div>
 
   <p id="legal">
-    Ce site est uniquement à but informatif et ne constitue en aucun cas un conseil en investissement. Investissez de manière responsable.<br>
-    <a id="open-legal" href="javascript:void(0)">Mentions légales, CGU & Politique de confidentialité</a>
+    Ce site est uniquement à but informatif et ne constitue en aucun cas un conseil en investissement. Investissez de manière responsable.
   </p>
-
-  <!-- Modal -->
-  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div id="modal">
-      <button class="close-btn" aria-label="Fermer la fenêtre">&times;</button>
-      <h2 id="modal-title">Mentions légales, CGU & Politique de confidentialité</h2>
-
-      <h3>1. Fonctionnalités de l’application</h3>
-      <p>Cette application permet de comparer en temps réel les prix de différentes crypto-monnaies sur plusieurs plateformes d’échange. Elle affiche également les actualités liées à la crypto.</p>
-
-      <h3>2. Droits de l’utilisateur</h3>
-      <ul>
-        <li>L’utilisateur peut consulter librement les données affichées.</li>
-        <li>L’utilisateur est responsable de ses décisions d’investissement.</li>
-        <li>L’utilisateur peut choisir la crypto-monnaie à afficher via le menu déroulant.</li>
-      </ul>
-
-      <h3>3. Limites de responsabilité</h3>
-      <p>L’application est fournie "en l’état" sans garantie d’exactitude ou d’exhaustivité des informations. L’auteur ne peut être tenu responsable des pertes liées à l’usage des données fournies.</p>
-
-      <h3>4. Politique de confidentialité</h3>
-      <p>Nous ne collectons aucune donnée personnelle. Aucune information identifiable n’est stockée. Nous pouvons utiliser des outils d’analyse anonymes pour améliorer le service, mais aucune donnée personnelle n’est collectée ni vendue.</p>
-
-      <h3>5. Mentions légales</h3>
-      <p><strong>Nom / Raison sociale :</strong> Jean Dupont<br>
-      <strong>Adresse :</strong> 10 rue Exemple, 75000 Paris, France<br>
-      <strong>Hébergeur :</strong> GitHub Pages</p>
-    </div>
-  </div>
 
   <script>
     const exchanges = [
@@ -393,80 +304,14 @@
       document.getElementById('last-update').textContent = `Dernière mise à jour : ${new Date().toLocaleTimeString()}`;
     }
 
-    async function updateNews() {
+    async function fetchNews() {
       const newsList = document.getElementById('news-list');
-      newsList.innerHTML = '';
-      // Exemple d'actualités (à remplacer par API si souhaité)
-      const newsItems = [
-        {
-          title: "Bitcoin dépasse les 40 000 USD",
-          url: "https://www.example.com/bitcoin-40k",
-          description: "Le Bitcoin franchit un nouveau seuil historique en 2025.",
-          image: "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
-          date: "2025-07-29"
-        },
-        {
-          title: "Ethereum prépare la mise à jour Shanghai",
-          url: "https://www.example.com/ethereum-shanghai",
-          description: "La communauté Ethereum se prépare à la mise à jour majeure.",
-          image: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-          date: "2025-07-28"
-        }
-      ];
+      newsList.innerHTML = 'Chargement des actualités...';
 
-      for (const news of newsItems) {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <img src="${news.image}" alt="Image de l'article" />
-          <div>
-            <a href="${news.url}" target="_blank" rel="noopener">${news.title}</a>
-            <p>${news.description}</p>
-            <small>Publié le ${news.date}</small>
-          </div>
-        `;
-        newsList.appendChild(li);
-      }
-    }
+      const apiKey = '4bada77a3a104adc89e27656cfecb3a6';
+      const query = encodeURIComponent('crypto OR bitcoin OR ethereum');
 
-    // Modal logic
-    const modalOverlay = document.getElementById('modal-overlay');
-    const openLegalBtn = document.getElementById('open-legal');
-    const closeModalBtn = modalOverlay.querySelector('.close-btn');
+      // Proxy CORS gratuit
+      const corsProxy = 'https://corsproxy.io/?';
 
-    openLegalBtn.addEventListener('click', () => {
-      modalOverlay.style.display = 'flex';
-      document.body.style.overflow = 'hidden'; // Prevent background scroll
-    });
-
-    closeModalBtn.addEventListener('click', () => {
-      modalOverlay.style.display = 'none';
-      document.body.style.overflow = 'auto';
-    });
-
-    modalOverlay.addEventListener('click', (e) => {
-      if (e.target === modalOverlay) {
-        modalOverlay.style.display = 'none';
-        document.body.style.overflow = 'auto';
-      }
-    });
-
-    // Keyboard accessibility: close modal on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
-        modalOverlay.style.display = 'none';
-        document.body.style.overflow = 'auto';
-      }
-    });
-
-    symbolSelect.addEventListener('change', () => {
-      updateChart(symbolSelect.value);
-      updatePrices();
-    });
-
-    // Initial load
-    updateChart(symbolSelect.value);
-    updatePrices();
-    updateNews();
-  </script>
-</body>
-</html>
+     
